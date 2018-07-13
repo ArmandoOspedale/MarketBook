@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Books</string>
+    <string name="categoria1">Scelti per te</string>
+    <string name="per_te">Per te</string>
+    <string name="shop">Negozio</string>
+    <string name="download">Download</string>
+    <string name="books">Books</string>
+    <string name="titolo">Titolo</string>
+    <string name="autore">Autore</string>
+    <string name="genere">Genere</string>
+    <string name="nomecommento">NomeCommento</string>
+    <string name="commento">Commento</string>
+    <string name="nomeutente">NomeUtente</string>
+    <string name="descrizione">Descrizione</string>
+    <string name="scan">scansiona</string>
+    <string name="acquista">Acquista</string>
+</resources>

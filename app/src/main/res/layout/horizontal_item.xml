@@ -1,0 +1,60 @@
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardview"
+    android:layout_width="130dp"
+    android:layout_height="wrap_content"
+    card_view:contentPadding="0dp"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="4dp"
+    card_view:cardBackgroundColor="@color/sfondo"
+    android:layout_margin="4dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/Copertina"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:background="#7ec8bd"
+            android:contentDescription="@string/categoria1"
+            card_view:srcCompat="@drawable/ic_image_black_24dp" />
+
+        <TextView
+            android:id="@+id/Titolo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Copertina"
+            android:layout_gravity="center"
+            android:layout_marginBottom="3dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="3dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textAlignment="center"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="14sp"
+            tools:text="Titolo" />
+
+        <TextView
+            android:id="@+id/Autore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Titolo"
+            android:layout_gravity="center"
+            android:layout_marginBottom="3dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="3dp"
+            android:fontFamily="sans-serif-condensed"
+            android:lineSpacingExtra="12sp"
+            android:textAlignment="center"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="14sp"
+            tools:text="Autore" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

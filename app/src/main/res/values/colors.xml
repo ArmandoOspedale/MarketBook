@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#4b8a83</color>
+    <color name="colorPrimaryDark">#4b8a83</color>
+    <color name="colorAccent">#eba800</color>
+    <color name="sfondo">#ffffff</color>
+    <color name="pulsanti">#4b8a83</color>
+    <color name="sfondoscuro">#a0e9fff8</color>
+</resources>
