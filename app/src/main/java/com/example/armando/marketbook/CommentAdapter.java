@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.ms.square.android.expandabletextview.ExpandableTextView;
+
 import java.util.List;
 
 
@@ -57,13 +60,13 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public class MyViewDescrizione extends RecyclerView.ViewHolder{
-        private TextView Descrizione;
+        private ExpandableTextView expandableTextView;
 
         MyViewDescrizione(View view) {
             super(view);
 
             // Inizializzo le visualizzazioni che appartengono alla RecyclerView Orinzontale
-            Descrizione = view.findViewById(R.id.descrizioneContenuto);
+            expandableTextView = view.findViewById(R.id.expand_text_view);
 
         }
     }
@@ -108,7 +111,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if(holder.getItemViewType()== LAYOUT_ONE)
         {
             MyViewDescrizione myViewDescrizione = (MyViewDescrizione) holder;
-            myViewDescrizione.Descrizione.setText(descrizione);
+            myViewDescrizione.expandableTextView.setText(descrizione);
+
         }
         else {
             MyViewComment myViewComment = (MyViewComment) holder;

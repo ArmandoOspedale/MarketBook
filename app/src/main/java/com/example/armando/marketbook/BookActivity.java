@@ -3,25 +3,43 @@ package com.example.armando.marketbook;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class BookActivity extends AppCompatActivity {
@@ -40,6 +58,16 @@ public class BookActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book);
+
+        /*FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("Avventura").document("Metro2033");
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Items items = documentSnapshot.toObject(Items.class);
+                Toast.makeText(getBaseContext(),items.getAutore(), Toast.LENGTH_SHORT).show();
+            }
+        });*/
 
         // Punto alla toolbar
         Toolbar toolbar = findViewById(R.id.toolbar2);
@@ -60,6 +88,8 @@ public class BookActivity extends AppCompatActivity {
         // Impostosto i riferimenti alle view
         TextView titolo = findViewById(R.id.titololibro);
         TextView autore = findViewById(R.id.autoreLibro);
+        TextView genere = findViewById(R.id.genereLibro);
+        final ImageView copertina = findViewById(R.id.Copertina);
         Download = findViewById(R.id.pulsanteDownload);
         InfoAutore = findViewById(R.id.pulsanteAutore);
         AggiungiCommento = findViewById(R.id.aggiungiCommento);
@@ -69,6 +99,28 @@ public class BookActivity extends AppCompatActivity {
         final Items libro = (Items)intent.getSerializableExtra("Items");
 
         if(libro!=null){
+
+            //Setto Titolo e Autore
+            titolo.setText(libro.getTitolo());
+            autore.setText(libro.getAutore());
+            genere.setText(libro.getGenere());
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://books-c7269.appspot.com").child(libro.getURLCopertina());
+            try {
+                final File localFile = File.createTempFile("images", "png");
+                storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        bitmap = Bitmap.createScaledBitmap(bitmap, 140,190,true);
+                        copertina.setImageBitmap(bitmap);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                    }
+                });
+            } catch (IOException e ) {}
 
             // Ottengo il riferimento alla RecyclerView per la descrizione e i commenti
             final RecyclerView mRecyclerView = findViewById(R.id.recyclerviewBook);
@@ -83,12 +135,11 @@ public class BookActivity extends AppCompatActivity {
             AddItemsToRecyclerViewArrayList();
 
             // Creo l'adapter e lo associo alla RecyclerView
-            CommentAdapter adapter = new CommentAdapter(Commenti,NomeCommenti,Descrizione);
+            CommentAdapter adapter = new CommentAdapter(Commenti,NomeCommenti,libro.getTrama());
             mRecyclerView.setAdapter(adapter);
 
-            //Setto Titolo e Autore
-            titolo.setText(libro.getTitolo());
-            autore.setText(libro.getAutore());
+
+
             //genere.setText(libro.getGenere());
 
             //Azione legata alla pressione del pulsante
@@ -132,9 +183,8 @@ public class BookActivity extends AppCompatActivity {
 
                 public void onClick(View v) {
 
-                    //Toast.makeText(v.getContext(),"Hai premuto Info Autore" , Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(v.getContext(),AutoreActivity.class);
-                    intent.putExtra("Items",libro.getAutore());
+                    intent.putExtra("ID",libro.getIDAutore());
                     startActivity(intent);
 
                 }
@@ -215,9 +265,5 @@ public class BookActivity extends AppCompatActivity {
         Descrizione="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
     }
-
-
-
-
 
 }

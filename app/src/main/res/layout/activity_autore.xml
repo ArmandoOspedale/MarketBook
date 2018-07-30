@@ -65,7 +65,7 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/Copertina"
+                        android:id="@+id/immagineAutore"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_alignParentStart="true"
@@ -85,7 +85,6 @@
                 android:layout_marginTop="35dp"
                 android:layout_toEndOf="@+id/cardview"
                 android:fontFamily="sans-serif-condensed"
-                android:text="@string/autore"
                 android:textAlignment="center"
                 android:textColor="@color/sfondo"
                 android:textSize="20sp"

@@ -1,12 +1,24 @@
 package com.example.armando.marketbook;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 // Per creare un'adapter utilizzabile da RecyclerView, è necessario estendere RecyclerView.Adapter
@@ -21,7 +33,7 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
 
         private TextView Titolo;
         private TextView Autore;
-        private CardView cv;
+        private ImageView Copertina;
 
         MyView(View view) {
             super(view);
@@ -29,7 +41,7 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
             view.setOnLongClickListener(this);
 
             // Inizializzo le visualizzazioni che appartengono alla RecyclerView Orinzontale
-            cv = view.findViewById(R.id.cardview);
+            Copertina = view.findViewById(R.id.Copertina);
             Titolo = view.findViewById(R.id.Titolo);
             Autore = view.findViewById(R.id.Autore);
         }
@@ -71,6 +83,24 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
     public void onBindViewHolder(@NonNull final MyView holder, final int position) {
         holder.Titolo.setText(book.get(position).getTitolo());
         holder.Autore.setText(book.get(position).getAutore());
+        // Creo istanza di FirebaseStorage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://books-c7269.appspot.com").child(book.get(position).getURLCopertina());
+        try {
+            final File localFile = File.createTempFile("images", "png");
+            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 130,190,true);
+                    holder.Copertina.setImageBitmap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                }
+            });
+        } catch (IOException e ) {}
     }
 
     // Restituisce il numero di elementi presenti nei dati
