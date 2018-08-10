@@ -15,4 +15,10 @@
     <string name="scan">scansiona</string>
     <string name="acquista">Acquista</string>
     <string name="trama">Trama</string>
+    <string name="todo">TODO</string>
+    <string name="altre_info">Continua</string>
+    <string name="background">background</string>
+    <string name="riduci">Riduci</string>
+    <string name="foto_autore">Foto Autore</string>
+    <string name="freccia">freccia</string>
 </resources>

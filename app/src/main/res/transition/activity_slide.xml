@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:transitionOrdering="together"
+    android:duration="400">
+    <slide android:slideEdge="start"
+            android:interpolator="@android:interpolator/linear">
+        <targets>
+            <target android:excludeId="@+id/navigationBar"/>
+            <target android:excludeId="@+id/appBarLayout"/>
+            <target android:excludeId="@android:id/statusBarBackground"/>
+            <target android:excludeId="@android:id/navigationBarBackground"/>
+        </targets>
+    </slide>
+    <slide android:slideEdge="bottom"
+        android:startDelay="200"
+        android:interpolator="@android:interpolator/linear">
+        <targets>
+            <target android:targetId="@+id/navigationBar"/>
+            <target android:excludeId="@+id/appBarLayout"/>
+            <target android:excludeId="@+id/cardview"/>
+            <target android:excludeId="@android:id/statusBarBackground"/>
+            <target android:excludeId="@android:id/navigationBarBackground"/>
+        </targets>
+    </slide>
+
+</transitionSet>

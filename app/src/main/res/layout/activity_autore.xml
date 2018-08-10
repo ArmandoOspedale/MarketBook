@@ -1,35 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_autore"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".AutoreActivity">
+    android:layout_height="match_parent">
+
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
         android:background="@color/colorPrimary"
-        android:elevation="4.1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:theme="@style/AppTheme.Toolbar" />
+        android:transitionName="toolbar"
+        app:theme="@style/AppTheme.Toolbar"
+        android:elevation="4.1dp">
 
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <RelativeLayout
-            android:id="@+id/relativeLayout"
+        <TextView
+            android:id="@+id/titoloBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginEnd="?attr/actionBarSize"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold|italic" />
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?android:attr/actionBarSize">
+
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
@@ -39,74 +49,113 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_scrollFlags="scroll|enterAlways">
 
+
+            <TextView
+                android:id="@+id/info_generale"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-condensed"
+                android:padding="4dp"
+                android:textAlignment="center"
+                android:textColor="@color/sfondo"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardview" />
+
             <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cardview"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:layout_margin="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="280dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
-                card_view:cardBackgroundColor="@color/sfondo"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                card_view:cardBackgroundColor="#00ffffff"
                 card_view:cardCornerRadius="45dp"
-                card_view:cardElevation="3dp"
+                card_view:cardElevation="4dp"
                 card_view:contentPadding="0dp"
-                card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintHorizontal_bias="0.08"
+                card_view:layout_constraintHorizontal_bias="0.2"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintVertical_bias="0.060000002">
+                card_view:layout_constraintTop_toTopOf="parent">
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutcopertina"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00ffffff">
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:indeterminate="true"
+                        android:indeterminateBehavior="repeat"
+                        android:indeterminateTint="@color/colorAccent"
+                        android:scaleY="1" />
 
                     <ImageView
                         android:id="@+id/immagineAutore"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
-                        android:background="#7ec8bd"
-                        android:contentDescription="@string/categoria1"
-                        card_view:srcCompat="@drawable/ic_person_outline_black_24dp" />
+                        android:contentDescription="@string/categoria1" />
 
                 </RelativeLayout>
 
             </android.support.v7.widget.CardView>
 
+
             <TextView
                 android:id="@+id/autoreLibro"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:layout_toEndOf="@+id/cardview"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif-condensed"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textColor="@color/sfondo"
-                android:textSize="20sp"
-                tools:layout_editor_absoluteX="340dp"
-                tools:text="Autore" />
+                android:textSize="24sp"
+                android:textStyle="italic"
+                app:layout_constraintBottom_toTopOf="@+id/info_generale"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cardview"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
 
 
     </android.support.design.widget.AppBarLayout>
 
-    <ExpandableListView
-        android:id="@+id/infoAutore"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="0.5dp"
-        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
-        android:scrollbars="none"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/relativeLayout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-</android.support.constraint.ConstraintLayout>
+        <com.example.armando.marketbook.AnimatedExpandableListView
+            android:id="@+id/mainList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:childDivider="@color/sfondoscuro"
+            android:dividerHeight="0.1dp"
+            android:nestedScrollingEnabled="true"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

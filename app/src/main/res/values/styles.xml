@@ -8,11 +8,20 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
         <item name="cardViewStyle">@style/CardView</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowSoftInputMode">stateAlwaysHidden|adjustResize</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">@transition/shared</item>
+
     </style>
 
     <style name="AppTheme.Toolbar" parent="AppTheme">
         <item name="android:textColorPrimary">@color/sfondo</item>
         <item name="android:textColorSecondary">@color/sfondo</item>
     </style>
-
 </resources>

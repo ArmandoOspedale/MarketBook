@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class VerticalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<ArrayList<Items>> books;
+    private ArrayList<ArrayList<Book>> books;
     private ArrayList<String> categoria;
     private SparseIntArray listPosition = new SparseIntArray();
     private HorizontalRecyclerViewAdapter.OnItemClickListener mItemClickListener;
@@ -30,10 +30,10 @@ public class VerticalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    //Costruttore VerticalRecyclerViewAdapter
-    VerticalRecyclerViewAdapter(ArrayList<ArrayList<Items>> verticalList, ArrayList<String> nomeCategoria) {
+    VerticalRecyclerViewAdapter(ArrayList<ArrayList<Book>> verticalList, ArrayList<String> nomeCategoria, Context context) {
         this.books = verticalList;
         this.categoria = nomeCategoria;
+        this.mContext = context;
     }
 
     @NonNull
@@ -50,7 +50,7 @@ public class VerticalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         LinearLayoutManager RecyclerViewLayout = new LinearLayoutManager(mContext);
         RecyclerViewLayout.setOrientation(LinearLayoutManager.HORIZONTAL);
         cellViewHolder.HorizontalRecyclerView.setLayoutManager( RecyclerViewLayout);
-        HorizontalRecyclerViewAdapter adapter = new HorizontalRecyclerViewAdapter(books.get(position));
+        HorizontalRecyclerViewAdapter adapter = new HorizontalRecyclerViewAdapter(books.get(position),mContext);
         cellViewHolder.HorizontalRecyclerView.setAdapter(adapter);
         cellViewHolder.Categoria.setText(categoria.get(position));
         adapter.SetOnItemClickListener(mItemClickListener);
@@ -77,7 +77,6 @@ public class VerticalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         return books.size();
     }
 
-    // for both short and long click
     public void SetOnItemClickListener(final HorizontalRecyclerViewAdapter.OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }

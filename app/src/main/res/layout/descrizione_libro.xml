@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayoutBook_Section"
@@ -9,9 +10,10 @@
         android:id="@+id/cardviewcomment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
         android:elevation="6dp"
         app:cardCornerRadius="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,7 +33,7 @@
                 android:layout_marginEnd="0dp"
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="0dp"
-                expandableTextView:animDuration="100"
+                expandableTextView:animDuration="20"
                 expandableTextView:layout_constraintBottom_toBottomOf="parent"
                 expandableTextView:layout_constraintEnd_toEndOf="parent"
                 expandableTextView:layout_constraintStart_toStartOf="parent"
@@ -57,13 +59,27 @@
                     app:layout_constraintTop_toBottomOf="@+id/descrizione"
                     tools:text="Commento" />
 
+                <TextView
+                    android:id="@+id/altreInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="@string/altre_info"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
                 <ImageButton
+                    android:nextFocusLeft="@id/altreInfo"
                     android:id="@id/expand_collapse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="2dp"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
+                    android:contentDescription="@string/background"
+                    android:padding="0dp"
                     tools:ignore="RtlHardcoded" />
 
             </com.ms.square.android.expandabletextview.ExpandableTextView>
@@ -78,16 +94,16 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif-condensed"
                 android:text="@string/trama"
+                android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold|italic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Descrizione" />
+
         </android.support.constraint.ConstraintLayout>
 
-
     </android.support.v7.widget.CardView>
-
 
 </RelativeLayout>

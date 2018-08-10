@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:transitionOrdering="sequential"
+    android:duration="800">
+    <slide
+        android:slideEdge="bottom"
+        android:interpolator="@android:interpolator/accelerate_quint">
+        <targets>
+            <target android:excludeId="@android:id/statusBarBackground"/>
+            <target android:excludeId="@android:id/navigationBarBackground"/>
+            <target android:excludeId="@+id/toolbar2"/>
+            <target android:excludeId="@+id/autoreLibro"/>
+        </targets>
+    </slide>
+</transitionSet>

@@ -6,7 +6,6 @@
     android:id="@+id/relativelayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sfondo"
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -20,20 +19,48 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:background="@color/colorPrimary"
-            android:elevation="10dp"
+            android:elevation="4.1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:transitionName="toolbar"
             app:layout_scrollFlags="scroll|enterAlways"
             app:theme="@style/AppTheme.Toolbar">
 
-            <android.support.v7.widget.SearchView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/search_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="end" />
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/titoloBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/search_view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <android.support.v7.widget.SearchView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/search_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="end"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+
 
         </android.support.v7.widget.Toolbar>
 
@@ -46,8 +73,8 @@
         android:background="@color/sfondo"
         android:elevation="10dp"
         android:layout_gravity="bottom"
-        app:itemIconTint="@color/pulsanti"
-        app:itemTextColor="@color/pulsanti"
+        app:itemIconTint="@color/colorPrimary"
+        app:itemTextColor="@color/colorPrimary"
         app:menu="@menu/navigation" />
 
     <android.support.v7.widget.RecyclerView
@@ -58,5 +85,4 @@
         android:nestedScrollingEnabled="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:scrollbars="none"/>
-
 </android.support.design.widget.CoordinatorLayout>

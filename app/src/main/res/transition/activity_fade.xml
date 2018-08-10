@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:transitionOrdering="sequential"
+android:duration="400">
+<slide
+    android:slideEdge="end"
+    android:interpolator="@android:interpolator/fast_out_linear_in">
+    <targets>
+        <target android:excludeId="@android:id/statusBarBackground"/>
+        <target android:excludeId="@android:id/navigationBarBackground"/>
+    </targets>
+</slide>
+</transitionSet>

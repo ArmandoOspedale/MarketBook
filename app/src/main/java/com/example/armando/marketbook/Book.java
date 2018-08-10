@@ -2,7 +2,7 @@ package com.example.armando.marketbook;
 
 import java.io.Serializable;
 
-public class Items implements Serializable {
+public class Book implements Serializable {
 
     private  String Titolo;
     private  String Autore;
@@ -11,8 +11,9 @@ public class Items implements Serializable {
     private  String Trama;
     private  String Genere;
     private  String IDAutore;
+    private  String Path;
 
-    Items(String titolo, String autore, String publicazione, String urlcopertina, String trama, String genere, String idautore){
+    Book(String titolo, String autore, String publicazione, String urlcopertina, String trama, String genere, String idautore){
         this.Titolo = titolo;
         this.Autore = autore;
         this.Publicazione = publicazione;
@@ -22,7 +23,7 @@ public class Items implements Serializable {
         this.IDAutore= idautore;
     }
 
-    Items() {}
+    Book() {}
 
     public String getTitolo() {
         return Titolo;
@@ -78,5 +79,13 @@ public class Items implements Serializable {
 
     public void setIDAutore(String IDAutore) {
         this.IDAutore = IDAutore;
+    }
+
+    public String getPath() {
+        return Path;
+    }
+
+    public void setPath(String path) {
+        Path = path;
     }
 }
