@@ -21,4 +21,12 @@
     <string name="riduci">Riduci</string>
     <string name="foto_autore">Foto Autore</string>
     <string name="freccia">freccia</string>
+    <string name="pulsantechiusura">pulsantechiusura</string>
+    <string name="nome_commento">Nome commento:</string>
+    <string name="commentobox">Commento:</string>
+    <string name="annulla">Annulla</string>
+    <string name="pubblica">Pubblica</string>
+    <string name="aggiungi_un_commento">Aggiungi un commento</string>
+    <string name="pulsante_uscita">pulsante_uscita</string>
+    <string name="sfocatura">Sfocatura</string>
 </resources>

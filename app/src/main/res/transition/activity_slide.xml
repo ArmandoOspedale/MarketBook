@@ -23,5 +23,4 @@
             <target android:excludeId="@android:id/navigationBarBackground"/>
         </targets>
     </slide>
-
 </transitionSet>

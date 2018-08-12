@@ -2,6 +2,7 @@ package com.example.armando.marketbook;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +17,20 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int LAYOUT_ONE= 0;
     private static final int LAYOUT_TWO= 1;
     private String descrizione;
-    private List<String> commento;
-    private List<String> nomeCommento;
+    private List<Commento> commenti;
     private OnItemClickListener mItemClickListener;
 
     public class MyViewComment extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView NomeCommento;
+        private TextView NomeUtente;
         private TextView Commento;
+        private TextView Data;
 
         MyViewComment(View view) {
             super(view);
             view.setOnClickListener(this);
-            NomeCommento = view.findViewById(R.id.nomeCommento);
+            Data = view.findViewById(R.id.Data);
+            NomeUtente = view.findViewById(R.id.nomeUtente);
             Commento = view.findViewById(R.id.commento);
         }
 
@@ -55,9 +57,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    CommentAdapter(List<String> commento, List<String> Nomecommento, String Descrizione) {
-        this.commento = commento;
-        this.nomeCommento = Nomecommento;
+    CommentAdapter(List<Commento> commenti, String Descrizione) {
+        this.commenti = commenti;
         this.descrizione = Descrizione;
     }
 
@@ -73,8 +74,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view =null;
-        RecyclerView.ViewHolder viewHolder = null;
+        View view;
+        RecyclerView.ViewHolder viewHolder;
         if(viewType==LAYOUT_ONE) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.descrizione_libro,parent,false);
             viewHolder = new MyViewDescrizione(view);
@@ -106,14 +107,15 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             });
         } else {
             MyViewComment myViewComment = (MyViewComment) holder;
-            myViewComment.NomeCommento.setText(nomeCommento.get(position-1));
-            myViewComment.Commento.setText(commento.get(position-1));
+            myViewComment.NomeUtente.setText(commenti.get(position-1).getNomeUtente());
+            myViewComment.Commento.setText(commenti.get(position-1).getCommento());
+            myViewComment.Data.setText(DateFormat.format("dd/MM/yyyy",commenti.get(position-1).getData()).toString());
         }
     }
 
     @Override
     public int getItemCount() {
-        return commento.size()+1;
+        return commenti.size()+1;
     }
 
     public interface OnItemClickListener {

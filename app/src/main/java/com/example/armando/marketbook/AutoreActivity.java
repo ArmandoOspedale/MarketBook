@@ -3,6 +3,8 @@ package com.example.armando.marketbook;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +15,7 @@ import android.transition.TransitionInflater;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -59,17 +62,13 @@ public class AutoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_autore);
 
         //Ottengo i dati passati
-        Bundle extra = getIntent().getExtras();
-        if (extra != null) {
-            String id = (String) extra.getSerializable("ID");
-            String transitionName = (String) extra.getSerializable("AUTORE");
-            if(id!=null && transitionName!=null){
-                setupToolBar(transitionName);
-                setupProgressBar();
-                setupDatabase(id);
-                setupInfoGenerale();
-                setupInfo();
-            }
+        String id = (String) getIntent().getSerializableExtra("ID");
+        if(id!=null){
+            setupToolBar();
+            setupProgressBar();
+            setupDatabase(id);
+            setupInfoGenerale();
+            setupInfo();
         }
     }
 
@@ -168,17 +167,16 @@ public class AutoreActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
     }
 
-    private void setupToolBar(String nome) {
+    private void setupToolBar() {
         toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-        toolbar.setTransitionName(nome);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                AutoreActivity.this.finishAfterTransition();
             }
         });
     }
@@ -186,6 +184,9 @@ public class AutoreActivity extends AppCompatActivity {
     private void setupWindowAnimations() {
         Transition slideEntrata = TransitionInflater.from(this).inflateTransition(R.transition.autore);
         getWindow().setEnterTransition(slideEntrata);
+        Transition slideUscita = TransitionInflater.from(this).inflateTransition(R.transition.autorein);
+        getWindow().setReturnTransition(slideUscita);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 }
 

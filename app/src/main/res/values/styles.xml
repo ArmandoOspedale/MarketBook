@@ -17,7 +17,7 @@
         <item name="android:navigationBarColor">@color/colorPrimary</item>
         <!-- specify shared element transitions -->
         <item name="android:windowSharedElementEnterTransition">@transition/shared</item>
-
+        <item name="android:windowSharedElementExitTransition">@transition/shared</item>
     </style>
 
     <style name="AppTheme.Toolbar" parent="AppTheme">

@@ -153,8 +153,9 @@
         android:id="@+id/recyclerviewBook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="306dp"
         android:layout_below="@+id/relativeLayout"
-        android:layout_marginBottom="55dp"
+        android:layout_marginBottom="48dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="0dp"
@@ -163,9 +164,18 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    </android.support.v7.widget.RecyclerView>
+    <ProgressBar
+        android:id="@+id/caricamentoCommenti"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:visibility="invisible"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_comment_black_24dp"
+        app:backgroundTint="@color/colorAccent"
+        app:elevation="4dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/pulsanteDownload"
@@ -196,8 +206,15 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="20dp"
         android:src="@drawable/ic_comment_black_24dp"
-        android:visibility="invisible"
         app:backgroundTint="@color/colorAccent"
         app:elevation="4dp" />
+
+    <ImageView
+        android:id="@+id/sfocato"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:elevation="10dp"
+        android:contentDescription="@string/sfocatura" />
 
 </android.support.design.widget.CoordinatorLayout>

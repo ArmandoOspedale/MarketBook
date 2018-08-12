@@ -1,5 +1,7 @@
 package com.example.armando.marketbook;
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.io.Serializable;
 
 public class Book implements Serializable {
@@ -12,6 +14,7 @@ public class Book implements Serializable {
     private  String Genere;
     private  String IDAutore;
     private  String Path;
+    private String Riferimento;
 
     Book(String titolo, String autore, String publicazione, String urlcopertina, String trama, String genere, String idautore){
         this.Titolo = titolo;
@@ -24,6 +27,14 @@ public class Book implements Serializable {
     }
 
     Book() {}
+
+    public String getRiferimento() {
+        return Riferimento;
+    }
+
+    public void setRiferimento(String riferimento) {
+        Riferimento = riferimento;
+    }
 
     public String getTitolo() {
         return Titolo;

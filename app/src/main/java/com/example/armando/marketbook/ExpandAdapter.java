@@ -69,34 +69,6 @@ public class ExpandAdapter extends AnimatedExpandableListView.AnimatedExpandable
         return 1;
     }
 
-    /**@Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        HashMap <String,Object> Oggetto =  (HashMap<String, Object>) getGroup(groupPosition);
-        try {
-            HashMap <String,List<HashMap<String,Object>>> x = (HashMap<String, List<HashMap<String,Object>>>) Oggetto.get("SottoInfo");
-            SecondLevelExpandableListView secondLevelELV = new SecondLevelExpandableListView(this.mContext);
-            sottoinfo = (List<HashMap<String,Object>>) x.get("Informazioni");
-            secondLevelELV.setAdapter(new SottoInfoAdapter(parent.getContext(),sottoinfo));
-            secondLevelELV.setDividerHeight(0);
-            //secondLevelELV.setGroupIndicator(null);
-            return secondLevelELV;
-        } catch (Exception e){
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.info, null);
-            TextView text = (TextView) convertView.findViewById(R.id.eventsListEventRowText);
-            text.setText( (String) Oggetto.get("Testo"));
-            return convertView;
-        }
-
-    }*/
-
-    /**@Override
-    public int getChildrenCount(int groupPosition) {
-        //HashMap <String,Object> Oggetto = (HashMap <String,Object>) getGroup(groupPosition);
-        //return Oggetto.size()-1;
-        return 1;
-    }*/
-
     @Override
     public Object getGroup(int groupPosition) {
         return Info.get(groupPosition);

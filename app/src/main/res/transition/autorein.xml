@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+<transitionSet
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:transitionOrdering="together"
+    android:duration="760">
+    <slide
 
-<transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="500"
-    android:interpolator="@android:interpolator/linear"
-    android:transitionOrdering="sequential"
-    >
-    <changeBounds>
+        android:slideEdge="top"
+        android:interpolator="@android:interpolator/anticipate">
         <targets>
             <target android:excludeId="@android:id/statusBarBackground"/>
             <target android:excludeId="@android:id/navigationBarBackground"/>
-            <target android:targetId="@+id/autoreLibro"/>
+            <target android:excludeId="@+id/toolbar2"/>
+            <target android:excludeId="@+id/expandablelist"/>
+            <target android:excludeId="@+id/mainList"/>
+            <target android:excludeId="@+id/autoreLibro"/>
         </targets>
-    </changeBounds>
+    </slide>
+    <fade>
+        <targets>
+            <target android:targetId="@+id/expandablelist"/>
+            <target android:targetId="@+id/mainList"/>
+        </targets>
+    </fade>
 </transitionSet>

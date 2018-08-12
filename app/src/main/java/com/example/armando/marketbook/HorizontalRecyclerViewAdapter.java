@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +23,8 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Per creare un'adapter utilizzabile da RecyclerView, è necessario estendere RecyclerView.Adapter
@@ -62,11 +61,16 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
         public void onClick(View view) {
             if (mItemClickListener != null) {
                 List<View> shared = new ArrayList<>();
+                HashMap<String,String> transitionName= new HashMap<>();
                 shared.add(Copertina);
+                transitionName.put(Copertina.getResources().getResourceName(Copertina.getId()),Copertina.getTransitionName());
                 shared.add(Titolo);
+                transitionName.put(Titolo.getResources().getResourceName(Titolo.getId()),Titolo.getTransitionName());
                 shared.add(Autore);
+                transitionName.put(Autore.getResources().getResourceName(Autore.getId()),Autore.getTransitionName());
                 shared.add(Immagine);
-                mItemClickListener.onItemClick(view, books.get(getLayoutPosition()),shared);
+                transitionName.put(Immagine.getResources().getResourceName(Immagine.getId()),Immagine.getTransitionName());
+                mItemClickListener.onItemClick(view, books.get(getLayoutPosition()),shared,transitionName);
             }
         }
 
@@ -142,7 +146,7 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
     // La recyclerView non ha setOnItemClickListener quindi bisogna implementarlo
     // Interfaccia della chiamata OnItemClickListener
     public interface OnItemClickListener {
-        void onItemClick(View view, Book book , List<View> shared);
+        void onItemClick(View view, Book book , List<View> shared, HashMap<String,String> transitionName);
         void onItemLongClick(View view, Book book);
     }
 

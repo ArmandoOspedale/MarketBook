@@ -2,7 +2,7 @@
 <transitionSet
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:transitionOrdering="sequential"
-    android:duration="1100">
+    android:duration="1050">
     <slide
         android:slideEdge="bottom"
         android:interpolator="@android:interpolator/anticipate_overshoot">

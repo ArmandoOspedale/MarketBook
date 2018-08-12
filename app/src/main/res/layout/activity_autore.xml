@@ -54,6 +54,8 @@
                 android:id="@+id/info_generale"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif-condensed"
                 android:padding="4dp"
@@ -138,7 +140,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/expandablelist"
         android:layout_below="@+id/relativeLayout"
+        android:layout_marginBottom="48dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.example.armando.marketbook.AnimatedExpandableListView
@@ -146,11 +150,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="0dp"
+            android:background="@android:color/white"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:layout_marginTop="0dp"
             android:childDivider="@color/sfondoscuro"
-            android:dividerHeight="0.1dp"
+            android:divider="@android:color/transparent"
             android:nestedScrollingEnabled="true"
             android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"

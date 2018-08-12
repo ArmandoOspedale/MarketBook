@@ -3,6 +3,7 @@ package com.example.armando.marketbook;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,14 +12,25 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -43,15 +55,16 @@ public class MainActivity extends AppCompatActivity {
     //Dati
     private ArrayList<ArrayList<Book>> libriCategoria;
     private ArrayList<String> nomeCategoria;
+    private boolean stato=false;
 
     //View
     private Toolbar toolbar;
     private RecyclerView mRecyclerView;
     private  BottomNavigationView bottomNavigationView;
-    private TextView TitoloBar;
 
     //Database
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +74,54 @@ public class MainActivity extends AppCompatActivity {
         setupToolbar();
         setupBottonNavigationView();
         setupRecyclerView();
-        ricercaLibri();
+        setupFirebase();
+        
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+        SearchView mSearchView = (SearchView) mSearch.getActionView();
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void setupFirebase() {
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            ricercaLibri();
+        } else {
+            signInAnonymously();
+        }
+        
+    }
+
+    private void signInAnonymously() {
+        mAuth.signInAnonymously().addOnSuccessListener(this, new  OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                ricercaLibri();
+            }
+        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.e("Errore", "signInAnonymously:FAILURE", exception);
+                    }
+                });
+
     }
 
     private void setupBottonNavigationView() {
@@ -81,6 +141,9 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot documentSnapshot : task.getResult()) {
                         Book book = documentSnapshot.toObject(Book.class);
+                        if (book != null) {
+                            book.setRiferimento(documentSnapshot.getReference().getPath());
+                        }
                         books.add(book);
                     }
                     libriCategoria.add(books);
@@ -91,19 +154,13 @@ public class MainActivity extends AppCompatActivity {
                     //Imposto il listener per il click sulla CardView
                     adapter.SetOnItemClickListener(new HorizontalRecyclerViewAdapter.OnItemClickListener() {
                         @Override
-                        public void onItemClick(View view, Book book, List<View> shared) {
+                        public void onItemClick(View view, Book book, List<View> shared, HashMap<String,String> transitionName) {
                             //Ottengo dall'adapter il libro > passare alla activity specifica per libro
                             //Creo l'intent per passare all'altra activity
                             Intent intent = new Intent(MainActivity.this,BookActivity.class);
+                            setIntent(intent);
                             intent.putExtra("LIBRO",book);
-                            HashMap<String,String> sharedtransitionName = new HashMap<>();
-                            for (int i=0;i<shared.size();i++){
-                                sharedtransitionName.put(shared.get(i).getResources().getResourceName(shared.get(i).getId()),shared.get(i).getTransitionName());
-                            }
-                            intent.putExtra("TRANSITION_NAME", (Serializable) sharedtransitionName);
-                            //intent.putExtra("TRANSITION_NAME",immagine.getTransitionName());
-                            View decorView = getWindow().getDecorView();
-                            View appBarLayout = decorView.findViewById(R.id.toolbar2);
+                            intent.putExtra("TRANSITION_NAME",transitionName);
                             View statusBar = findViewById(android.R.id.statusBarBackground);
                             View navigationBar = findViewById(android.R.id.navigationBarBackground);
                             List<Pair<View, String>> pairs = new ArrayList<>();
@@ -113,13 +170,12 @@ public class MainActivity extends AppCompatActivity {
                             if (navigationBar != null) {
                                 pairs.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
                             }
-                            if (appBarLayout != null) {
-                                pairs.add(Pair.create(appBarLayout, appBarLayout.getTransitionName()));
+                            if (toolbar != null) {
+                                pairs.add(Pair.create((View)toolbar, toolbar.getTransitionName()));
                             }
                             for (int i=0;i<shared.size();i++){
                                 pairs.add(Pair.create(shared.get(i), shared.get(i).getTransitionName()));
                             }
-                            //pairs.add(Pair.create(immagine, immagine.getTransitionName()));
                             startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,pairs.toArray(new Pair[pairs.size()])).toBundle());
                         }
 
@@ -160,15 +216,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupToolbar() {
         toolbar = findViewById(R.id.toolbar2);
-        TitoloBar = findViewById(R.id.titoloBar);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-        TitoloBar.setText("Books");
     }
 
     private void setupWindowAnimations() {
-        Transition slide = TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
-        getWindow().setExitTransition(slide);
+        getWindow().setExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_slide));
     }
 
 }
