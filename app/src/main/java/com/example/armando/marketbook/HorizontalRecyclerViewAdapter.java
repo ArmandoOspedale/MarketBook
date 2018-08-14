@@ -10,6 +10,8 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,12 +38,15 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
     private List<Book> books; //Libri contenuti all'interno di una categoria
     private OnItemClickListener mItemClickListener;
     private Context context;
+    private int lastPosition = -1;
+    private boolean animation;
 
     public class MyView extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private TextView Titolo;
         private TextView Autore;
         private ImageView Copertina;
         private ProgressBar ProgressBar;
+        private TextView Prezzo;
         private View Immagine;
 
         MyView(View view) {
@@ -55,6 +60,7 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
             Autore = view.findViewById(R.id.autoreLibro);
             ProgressBar = view.findViewById(R.id.progressBar);
             Immagine = view.findViewById(R.id.cardview);
+            Prezzo = view.findViewById(R.id.prezzo);
         }
 
         @Override
@@ -64,10 +70,10 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
                 HashMap<String,String> transitionName= new HashMap<>();
                 shared.add(Copertina);
                 transitionName.put(Copertina.getResources().getResourceName(Copertina.getId()),Copertina.getTransitionName());
-                shared.add(Titolo);
-                transitionName.put(Titolo.getResources().getResourceName(Titolo.getId()),Titolo.getTransitionName());
-                shared.add(Autore);
-                transitionName.put(Autore.getResources().getResourceName(Autore.getId()),Autore.getTransitionName());
+                //shared.add(Titolo);
+                //transitionName.put(Titolo.getResources().getResourceName(Titolo.getId()),Titolo.getTransitionName());
+                //shared.add(Autore);
+                //transitionName.put(Autore.getResources().getResourceName(Autore.getId()),Autore.getTransitionName());
                 shared.add(Immagine);
                 transitionName.put(Immagine.getResources().getResourceName(Immagine.getId()),Immagine.getTransitionName());
                 mItemClickListener.onItemClick(view, books.get(getLayoutPosition()),shared,transitionName);
@@ -89,6 +95,13 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
     HorizontalRecyclerViewAdapter(List<Book> horizontalList, Context mcontext) {
         this.books = horizontalList;
         this.context = mcontext;
+        this.animation=false;
+    }
+
+    HorizontalRecyclerViewAdapter(List<Book> horizontalList, Context mcontext, boolean animation) {
+        this.books = horizontalList;
+        this.context = mcontext;
+        this.animation = animation;
     }
 
     //Viene chiamato quando ViewHolder personalizzato ha bisogno di essere inizializzato
@@ -107,7 +120,8 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
         final Book oggetto = books.get(position);
         holder.Titolo.setText(oggetto.getTitolo());
         holder.Autore.setText(oggetto.getAutore());
-        ViewCompat.setTransitionName(holder.Immagine,oggetto.getGenere());
+        holder.Prezzo.setText(String.valueOf(oggetto.getPrezzo()) + "\u20ac");
+        ViewCompat.setTransitionName(holder.Immagine,oggetto.getIDAutore());
         ViewCompat.setTransitionName(holder.Titolo,oggetto.getTitolo());
         ViewCompat.setTransitionName(holder.Autore,oggetto.getAutore());
         ViewCompat.setTransitionName(holder.Copertina,oggetto.getURLCopertina());
@@ -135,6 +149,9 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
         } catch (IOException e ) {
             holder.Copertina.setImageResource(R.drawable.ic_image_black_24dp);
         }
+        if(animation){
+            setAnimation(holder.itemView,position);
+        }
     }
 
     // Restituisce il numero di elementi presenti nei dati
@@ -153,6 +170,14 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
     // Per pressione lunga e corta
     public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
+    }
+
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.item);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
 }

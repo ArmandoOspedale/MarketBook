@@ -10,22 +10,22 @@ import android.graphics.BitmapFactory;
 
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.transition.TransitionInflater;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,13 +75,8 @@ public class BookActivity extends AppCompatActivity {
     private ProgressBar CaricamentoCommenti;
     private FloatingActionButton Download;
     private FloatingActionButton InfoAutore;
-    private FloatingActionButton AggiungiCommento;
-    private TextView Titolo;
-    private TextView Autore;
-    private TextView Genere;
     private TextView TitoloBar;
     private ImageView Copertina;
-    private CardView Contenitore;
     private RecyclerView mRecyclerView;
 
     //Database
@@ -95,13 +90,13 @@ public class BookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setupWindowAnimations();
         setContentView(R.layout.activity_book);
-        setupToolbar();
-        setupProgressBar();
-        setupRecyclerView();
 
         //Ottengo i dati passati
         Bundle extra = getIntent().getExtras();
         if(extra!=null){
+            setupToolbar();
+            setupProgressBar();
+            setupRecyclerView();
             libro = (Book) extra.getSerializable("LIBRO");
             HashMap<String,String> transitionName = (HashMap<String, String>) extra.getSerializable("TRANSITION_NAME");
             if(libro!=null && transitionName!=null){
@@ -134,8 +129,8 @@ public class BookActivity extends AppCompatActivity {
     }
 
     private void setupAggiungiCommento(final String reference) {
-        AggiungiCommento = findViewById(R.id.aggiungiCommento);
-        AggiungiCommento.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton aggiungiCommento = findViewById(R.id.aggiungiCommento);
+        aggiungiCommento.setOnClickListener(new View.OnClickListener() {
 
             @SuppressLint("ResourceType")
             @Override
@@ -162,7 +157,6 @@ public class BookActivity extends AppCompatActivity {
                     popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                         @Override
                         public void onDismiss() {
-                            Toast.makeText(getApplicationContext(),"Commento annullato" , Toast.LENGTH_SHORT).show();
                             sfondoSfocato.setVisibility(View.GONE);
                         }
                     });
@@ -183,7 +177,6 @@ public class BookActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(isEmpty(Commento)){
                     inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY,0);
-                    sfondoSfocato.setVisibility(View.GONE);
                     popupWindow.dismiss();
                     makeSendComment(Commento.getText().toString(), reference);
                 }else{
@@ -196,7 +189,6 @@ public class BookActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY,0);
-                sfondoSfocato.setVisibility(View.GONE);
                 popupWindow.dismiss();
                 Toast.makeText(v.getContext(),"Commento annullato" , Toast.LENGTH_SHORT).show();
             }
@@ -418,6 +410,9 @@ public class BookActivity extends AppCompatActivity {
                 if (navigationBar != null) {
                     pairs.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
                 }
+                if (Toolbar != null) {
+                    pairs.add(Pair.create((View)Toolbar, Toolbar.getTransitionName()));
+                }
                 Bundle options = ActivityOptions.makeSceneTransitionAnimation(BookActivity.this, pairs.toArray(new Pair[pairs.size()])).toBundle();
                 startActivity(intent, options);
             }
@@ -426,7 +421,8 @@ public class BookActivity extends AppCompatActivity {
     }
 
     private void setupCommenti(List<Commento> commenti, String trama, final String titolo, boolean flag) {
-        CommentAdapter adapter = new CommentAdapter(commenti,trama);
+        AppBarLayout appBarLayout = findViewById(R.id.appBarLayout);
+        CommentAdapter adapter = new CommentAdapter(commenti,trama, appBarLayout);
         mRecyclerView.setAdapter(adapter);
         if(!flag){
             mRecyclerView.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.enter_from_left));
@@ -436,35 +432,41 @@ public class BookActivity extends AppCompatActivity {
             CaricamentoCommenti.setVisibility(View.INVISIBLE);
         }
         mRecyclerView.setVisibility(View.VISIBLE);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
-            @SuppressLint("ResourceType")
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
-                if ( dy>0 && Download.isShown()) {
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (Math.abs(verticalOffset)-appBarLayout.getTotalScrollRange() == 0)
+                {
                     Download.hide();
                     InfoAutore.hide();
-                    TitoloBar.setText(titolo);
-                    Animation in = new AlphaAnimation(0.0f, 1.0f);
-                    in.setDuration(300);
-                    TitoloBar.startAnimation(in);
-                } else if( dy<0 && !Download.isShown()){
+                    if(TitoloBar.getText().toString().equals("")){
+                        TitoloBar.setText(titolo);
+                        Animation in = new AlphaAnimation(0.0f, 1.0f);
+                        in.setDuration(300);
+                        TitoloBar.startAnimation(in);
+                    }
+                }
+                else
+                {
                     Download.show();
                     InfoAutore.show();
-                    Animation out = new AlphaAnimation(1.0f, 0.0f);
-                    out.setDuration(300);
-                    out.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation){}
+                    if(TitoloBar.getText().toString().equals(titolo)){
+                        Animation out = new AlphaAnimation(1.0f, 0.0f);
+                        out.setDuration(300);
+                        out.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation){}
 
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            TitoloBar.setText(null);
-                        }
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                TitoloBar.setText(null);
+                            }
 
-                        @Override
-                        public void onAnimationRepeat(Animation animation){}
-                    });
-                    TitoloBar.startAnimation(out);
+                            @Override
+                            public void onAnimationRepeat(Animation animation){}
+                        });
+                        TitoloBar.startAnimation(out);
+                    }
                 }
             }
         });
@@ -472,9 +474,10 @@ public class BookActivity extends AppCompatActivity {
 
     private void setupCopertina(HashMap<String,String> transitionName) {
         Copertina = findViewById(R.id.Copertina);
-        Contenitore = findViewById(R.id.cardview);
-        Contenitore.setTransitionName(transitionName.get(Contenitore.getResources().getResourceName(Contenitore.getId())));
+        CardView contenitore = findViewById(R.id.cardview);
+        contenitore.setTransitionName(transitionName.get(contenitore.getResources().getResourceName(contenitore.getId())));
         Copertina.setTransitionName(transitionName.get(Copertina.getResources().getResourceName(Copertina.getId())));
+        final DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
         if(libro.getPath()==null){
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReferenceFromUrl("gs://books-c7269.appspot.com").child(libro.getURLCopertina());
@@ -484,16 +487,15 @@ public class BookActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                        DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
                         bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(140 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),Math.round(190 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),true);
                         Copertina.setImageBitmap(bitmap);
-                        supportStartPostponedEnterTransition();
+                        //supportStartPostponedEnterTransition();
                         ProgressBar.setVisibility(View.GONE);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        supportStartPostponedEnterTransition();
+                        //supportStartPostponedEnterTransition();
                     }
                 });
             } catch (IOException e ) {
@@ -501,7 +503,7 @@ public class BookActivity extends AppCompatActivity {
             }
         }   else{
             Bitmap bitmap = BitmapFactory.decodeFile(libro.getPath());
-            bitmap = Bitmap.createScaledBitmap(bitmap, 140,190,true);
+            bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(140 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),Math.round(190 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),true);
             Copertina.setImageBitmap(bitmap);
             ProgressBar.setVisibility(View.GONE);
         }
@@ -513,45 +515,65 @@ public class BookActivity extends AppCompatActivity {
             @SuppressLint("ResourceType")
             @Override
             public void onClick(View v) {
-
-                // Inizializzo una nuova istanza del LayoutInflater service
-                LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                // Creo la mia customView infilandoci il layout desiderato
-                View customView = inflater.inflate(R.layout.activity_barcode,null);
-                // Associo una animazione
-                customView.setAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.animator.popupanim));
-                // Creo un popupwindows che mostra la mia customView
-                PopupWindow mPopupWindow = new PopupWindow(customView);
-                mPopupWindow.setWidth(800);
-                mPopupWindow.setHeight(350);
-                mPopupWindow.setFocusable(true);
-                mPopupWindow.setElevation(8);
-                TextView descrizioneAcquisto = customView.findViewById(R.id.messaggio);
-                Button acquista = customView.findViewById(R.id.acquista_button);
-                descrizioneAcquisto.setText("Se premi ACQUISTA accetti di acquistare questo libro e di procedere quindi alla procedura di pagamento");
-                mPopupWindow.showAtLocation(Download, Gravity.CENTER, 0 , 0);
-                mPopupWindow.setOutsideTouchable(false);
-                acquista.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(v.getContext(),"Avviata procedura di acquisto" , Toast.LENGTH_SHORT).show();
-                    }
-                });
-
+                final ImageView sfondoSfocato = findViewById(R.id.sfocato);
+                Bitmap map=takeScreenShot(BookActivity.this);
+                Bitmap fast=fastblur(map);
+                Drawable draw=new BitmapDrawable(getResources(),fast);
+                LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                @SuppressLint("InflateParams") View inflatedLayoutView = layoutInflater != null ? layoutInflater.inflate(R.layout.activity_barcode, null) : null;
+                if (inflatedLayoutView != null) {
+                    inflatedLayoutView.setAnimation(AnimationUtils.loadAnimation(BookActivity.this, R.anim.popup_enter));
+                    final PopupWindow popupWindow = new PopupWindow(inflatedLayoutView);
+                    sfondoSfocato.setImageDrawable(draw);
+                    sfondoSfocato.setVisibility(View.VISIBLE);
+                    popupWindow.setWidth(FrameLayout.LayoutParams.MATCH_PARENT);
+                    popupWindow.setHeight(FrameLayout.LayoutParams.MATCH_PARENT);
+                    popupWindow.setOutsideTouchable(false);
+                    popupWindow.setFocusable(true);
+                    popupWindow.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+                    popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                    popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                    popupWindow.showAtLocation(v, Gravity.CENTER_HORIZONTAL, 0 , 0);
+                    TextView descrizioneAcquisto = inflatedLayoutView.findViewById(R.id.messaggio);
+                    Button acquista = inflatedLayoutView.findViewById(R.id.acquista_button);
+                    ImageButton annulla = inflatedLayoutView.findViewById(R.id.annulla);
+                    descrizioneAcquisto.setText("Se premi ACQUISTA accetti di acquistare questo libro e di procedere quindi alla procedura di pagamento");
+                    acquista.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(v.getContext(),"Avviata procedura di acquisto" , Toast.LENGTH_SHORT).show();
+                            popupWindow.dismiss();
+                        }
+                    });
+                    annulla.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            sfondoSfocato.setVisibility(View.GONE);
+                            popupWindow.dismiss();
+                        }
+                    });
+                    popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            sfondoSfocato.setVisibility(View.GONE);
+                        }
+                    });
+                }
             }
-
         });
     }
 
     private void setupInfo(HashMap<String,String> transitionName) {
-        Titolo = findViewById(R.id.titololibro);
-        Autore = findViewById(R.id.autoreLibro);
-        Titolo.setTransitionName(transitionName.get(Titolo.getResources().getResourceName(Titolo.getId())));
-        Autore.setTransitionName(transitionName.get(Autore.getResources().getResourceName(Autore.getId())));
-        Genere = findViewById(R.id.genereLibro);
-        Titolo.setText(libro.getTitolo());
-        Autore.setText(libro.getAutore());
-        Genere.setText(libro.getGenere());
+        TextView titolo = findViewById(R.id.titololibro);
+        TextView autore = findViewById(R.id.autoreLibro);
+        //Titolo.setTransitionName(transitionName.get(Titolo.getResources().getResourceName(Titolo.getId())));
+        //Autore.setTransitionName(transitionName.get(Autore.getResources().getResourceName(Autore.getId())));
+        TextView dataPubblicazione = findViewById(R.id.dataLibro);
+        TextView prezzo = findViewById(R.id.prezzo);
+        titolo.setText(libro.getTitolo());
+        autore.setText(libro.getAutore());
+        dataPubblicazione.setText("Anno:" + DateFormat.format("yyyy",libro.getPubblicazione()));
+        prezzo.setText(String.valueOf(libro.getPrezzo())+ "\u20ac");
     }
 
     private void setupRecyclerView() {
@@ -600,8 +622,8 @@ public class BookActivity extends AppCompatActivity {
 
     private void setupWindowAnimations() {
         getWindow().setEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.activity_fade));
-        getWindow().setReenterTransition(TransitionInflater.from(this).inflateTransition(R.transition.autoreout));
-        getWindow().setExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.book_uscita));
+        //getWindow().setReenterTransition(TransitionInflater.from(this).inflateTransition(R.transition.autoreout));
+        //getWindow().setExitTransition(TransitionInflater.from(this).inflateTransition(R.transition.book_uscita));
     }
 
 }

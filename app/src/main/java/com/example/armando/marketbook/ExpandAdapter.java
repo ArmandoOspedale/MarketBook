@@ -52,6 +52,7 @@ public class ExpandAdapter extends AnimatedExpandableListView.AnimatedExpandable
             secondLevelELV.setAdapter(new SottoInfoAdapter(parent.getContext(),sottoinfo));
             secondLevelELV.setDividerHeight(0);
             secondLevelELV.setGroupIndicator(null);
+            secondLevelELV.setFocusable(false);
             secondLevelELV.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
 
             return secondLevelELV;
@@ -81,7 +82,6 @@ public class ExpandAdapter extends AnimatedExpandableListView.AnimatedExpandable
         }catch (Exception e){
             return 0;
         }
-
     }
 
     @Override

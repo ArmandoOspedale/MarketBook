@@ -50,7 +50,7 @@ public class VerticalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         LinearLayoutManager RecyclerViewLayout = new LinearLayoutManager(mContext);
         RecyclerViewLayout.setOrientation(LinearLayoutManager.HORIZONTAL);
         cellViewHolder.HorizontalRecyclerView.setLayoutManager( RecyclerViewLayout);
-        HorizontalRecyclerViewAdapter adapter = new HorizontalRecyclerViewAdapter(books.get(position),mContext);
+        HorizontalRecyclerViewAdapter adapter = new HorizontalRecyclerViewAdapter(books.get(position),mContext,true);
         cellViewHolder.HorizontalRecyclerView.setAdapter(adapter);
         cellViewHolder.Categoria.setText(categoria.get(position));
         adapter.SetOnItemClickListener(mItemClickListener);

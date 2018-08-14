@@ -29,4 +29,7 @@
     <string name="aggiungi_un_commento">Aggiungi un commento</string>
     <string name="pulsante_uscita">pulsante_uscita</string>
     <string name="sfocatura">Sfocatura</string>
+    <string name="potrebbero_interessarti_dell_autore">Altri dell\' autore</string>
+    <string name="info_sull_autore">Info sull\'Autore</string>
+    <string name="cerca">Cerca</string>
 </resources>

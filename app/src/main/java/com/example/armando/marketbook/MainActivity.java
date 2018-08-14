@@ -3,25 +3,23 @@ package com.example.armando.marketbook;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.support.v7.widget.SearchView;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,16 +28,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     //Dati
     private ArrayList<ArrayList<Book>> libriCategoria;
     private ArrayList<String> nomeCategoria;
-    private boolean stato=false;
 
     //View
     private Toolbar toolbar;
@@ -81,8 +75,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
-        MenuItem mSearch = menu.findItem(R.id.action_search);
+        MenuItem mSearch = menu.findItem(R.id.m_search);
         SearchView mSearchView = (SearchView) mSearch.getActionView();
+        mSearchView.findViewById(android.support.v7.appcompat.R.id.search_plate).setBackground(null);
+        EditText et= mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        et.setHintTextColor(getResources().getColor(R.color.sfondomedio));
+        et.setHint("Cerca libri, autori...");
+        mSearchView.setIconified(false);
+        mSearchView.clearFocus();
+        final ListView listView = findViewById(R.id.list_view);
+        mSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                listView.setVisibility(View.VISIBLE);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                listView.setVisibility(View.GONE);
+                return true;
+            }
+        });
+
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -91,11 +106,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 return false;
             }
         });
         return super.onCreateOptionsMenu(menu);
     }
+
 
     private void setupFirebase() {
         mAuth = FirebaseAuth.getInstance();
@@ -135,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         final ArrayList<Book> books = new ArrayList<>();
 
         //Query al Database : Ottengo tutti i documenti
-        db.collection("Avventura").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("Libri").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {

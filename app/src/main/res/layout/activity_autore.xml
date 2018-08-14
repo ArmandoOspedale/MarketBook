@@ -3,10 +3,10 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_autore"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"
@@ -28,13 +28,15 @@
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold|italic" />
+
     </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
+        android:id="@+id/appBarLayout"
         android:layout_height="wrap_content"
+        app:elevation="0dp"
         android:layout_marginTop="?android:attr/actionBarSize">
-
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/relativeLayout"
@@ -44,31 +46,60 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
             android:background="@color/colorPrimary"
-            android:elevation="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-
-            <TextView
-                android:id="@+id/info_generale"
+            <com.ms.square.android.expandabletextview.ExpandableTextView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/expand_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif-condensed"
-                android:padding="4dp"
-                android:textAlignment="center"
-                android:textColor="@color/sfondo"
-                android:textSize="14sp"
-                android:textStyle="italic"
-                app:layout_constraintBottom_toBottomOf="parent"
+                expandableTextView:animDuration="100"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardview" />
+                app:layout_constraintTop_toBottomOf="@+id/cardview"
+                expandableTextView:maxCollapsedLines="3">
 
-            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                <TextView
+                    android:id="@id/expandable_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="0dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="@string/descrizione"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/descrizione"
+                    tools:text="Commento" />
+
+                <ImageButton
+                    android:id="@id/expand_collapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/background"
+                    android:padding="0dp"
+                    tools:ignore="RtlHardcoded" />
+
+            </com.ms.square.android.expandabletextview.ExpandableTextView>
+
+            <android.support.v7.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cardview"
                 android:layout_width="90dp"
@@ -113,7 +144,6 @@
 
             </android.support.v7.widget.CardView>
 
-
             <TextView
                 android:id="@+id/autoreLibro"
                 android:layout_width="0dp"
@@ -127,13 +157,71 @@
                 android:textColor="@color/sfondo"
                 android:textSize="24sp"
                 android:textStyle="italic"
-                app:layout_constraintBottom_toTopOf="@+id/info_generale"
+                app:layout_constraintBottom_toTopOf="@+id/expand_text_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cardview"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        </android.support.constraint.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@android:color/white"
+                app:layout_constraintTop_toBottomOf="@+id/expand_text_view"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/AltridellAutore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:fontFamily="sans-serif-condensed"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:nestedScrollingEnabled="true"
+                    android:scrollbars="none"
+                    android:paddingEnd="8dp"
+                    android:paddingStart="8dp"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="italic"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerviewBook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:nestedScrollingEnabled="true"
+                    android:layout_marginBottom="4dp"
+                    android:scrollbars="none"
+                    android:background="@android:color/white"
+                    android:paddingBottom="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingStart="4dp" />
+
+                <TextView
+                    android:id="@+id/TextInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:fontFamily="sans-serif-condensed"
+                    android:nestedScrollingEnabled="true"
+                    android:paddingEnd="8dp"
+                    android:paddingStart="8dp"
+                    android:scrollbars="none"
+                    android:text="@string/info_sull_autore"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    android:visibility="gone"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            </LinearLayout>
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -143,13 +231,15 @@
         android:id="@+id/expandablelist"
         android:layout_below="@+id/relativeLayout"
         android:layout_marginBottom="48dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:orientation="vertical">
 
         <com.example.armando.marketbook.AnimatedExpandableListView
             android:id="@+id/mainList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="0dp"
+            android:minHeight="200dp"
             android:background="@android:color/white"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
@@ -161,6 +251,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

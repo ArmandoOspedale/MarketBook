@@ -1,32 +1,41 @@
 package com.example.armando.marketbook;
 
-import com.google.firebase.firestore.DocumentReference;
-
 import java.io.Serializable;
+import java.util.Date;
 
 public class Book implements Serializable {
 
     private  String Titolo;
     private  String Autore;
-    private  String Publicazione;
     private  String URLCopertina;
     private  String Trama;
     private  String Genere;
     private  String IDAutore;
+    private  Date Pubblicazione;
     private  String Path;
-    private String Riferimento;
+    private  double Prezzo;
+    private  String Riferimento;
 
-    Book(String titolo, String autore, String publicazione, String urlcopertina, String trama, String genere, String idautore){
+    Book(String titolo, String autore, Date publicazione, String urlcopertina, String trama, String genere, String idautore,double prezzo){
         this.Titolo = titolo;
         this.Autore = autore;
-        this.Publicazione = publicazione;
+        this.Pubblicazione = publicazione;
         this.URLCopertina = urlcopertina;
-        this.Trama= trama;
-        this.Genere= genere;
-        this.IDAutore= idautore;
+        this.Trama = trama;
+        this.Genere = genere;
+        this.IDAutore = idautore;
+        this.Prezzo = prezzo;
     }
 
     Book() {}
+
+    public double getPrezzo() {
+        return Prezzo;
+    }
+
+    public void setPrezzo(double prezzo) {
+        Prezzo = prezzo;
+    }
 
     public String getRiferimento() {
         return Riferimento;
@@ -52,12 +61,12 @@ public class Book implements Serializable {
         Autore = autore;
     }
 
-    public String getPublicazione() {
-        return Publicazione;
+    public Date getPubblicazione() {
+        return Pubblicazione;
     }
 
-    public void setPublicazione(String publicazione) {
-        Publicazione = publicazione;
+    public void setPubblicazione(Date publicazione) {
+        Pubblicazione = publicazione;
     }
 
     public String getURLCopertina() {

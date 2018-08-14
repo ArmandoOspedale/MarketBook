@@ -2,15 +2,14 @@
 <transitionSet
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:transitionOrdering="sequential"
-    android:duration="600">
+    android:duration="800">
     <slide
-        android:slideEdge="top"
-        android:interpolator="@android:interpolator/accelerate_decelerate">
+        android:slideEdge="bottom"
+        android:interpolator="@android:interpolator/accelerate_quad">
         <targets>
             <target android:excludeId="@android:id/statusBarBackground"/>
             <target android:excludeId="@android:id/navigationBarBackground"/>
             <target android:excludeId="@+id/toolbar2"/>
-            <target android:excludeId="@+id/autoreLibro"/>
         </targets>
     </slide>
 </transitionSet>

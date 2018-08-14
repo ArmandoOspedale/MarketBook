@@ -33,7 +33,7 @@
                 android:layout_marginEnd="0dp"
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="0dp"
-                expandableTextView:animDuration="20"
+                expandableTextView:animDuration="100"
                 expandableTextView:layout_constraintBottom_toBottomOf="parent"
                 expandableTextView:layout_constraintEnd_toEndOf="parent"
                 expandableTextView:layout_constraintStart_toStartOf="parent"
@@ -69,7 +69,8 @@
                     android:textAllCaps="true"
                     android:textColor="@color/colorPrimary"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <ImageButton
                     android:nextFocusLeft="@id/altreInfo"

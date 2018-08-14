@@ -2,10 +2,10 @@
 <transitionSet
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:transitionOrdering="together"
-    android:duration="440">
+    android:duration="625">
     <slide
-        android:slideEdge="bottom"
-        android:interpolator="@android:interpolator/accelerate_quad">
+        android:slideEdge="start"
+        android:interpolator="@android:interpolator/anticipate">
         <targets>
             <target android:excludeId="@android:id/statusBarBackground"/>
             <target android:excludeId="@+id/toolbar2"/>

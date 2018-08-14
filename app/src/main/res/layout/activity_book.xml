@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_book"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -23,6 +24,7 @@
             android:layout_marginEnd="?attr/actionBarSize"
             android:fontFamily="sans-serif-condensed"
             android:gravity="center"
+            android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@android:color/white"
             android:textSize="18sp"
@@ -32,13 +34,14 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
+        android:id="@+id/appBarLayout"
         android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_height="wrap_content">
 
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
@@ -108,7 +111,7 @@
                 android:textAlignment="viewStart"
                 android:textColor="@color/sfondo"
                 android:textSize="24sp"
-                android:textStyle="bold"
+                android:textStyle="bold|italic"
                 tools:layout_editor_absoluteX="360dp"
                 tools:text="Titolo" />
 
@@ -129,20 +132,32 @@
                 tools:text="Autore" />
 
             <TextView
-                android:id="@+id/genereLibro"
+                android:id="@+id/dataLibro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/autoreLibro"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="0dp"
                 android:layout_toEndOf="@+id/cardview"
                 android:fontFamily="sans-serif-condensed"
-                android:text="@string/genere"
                 android:textAlignment="textStart"
                 android:textColor="@color/sfondo"
                 android:textSize="14sp"
                 tools:layout_editor_absoluteX="334dp"
-                tools:layout_editor_absoluteY="83dp"
-                tools:text="Genere" />
+                tools:layout_editor_absoluteY="83dp"/>
+
+            <TextView
+                android:id="@+id/prezzo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dataLibro"
+                android:layout_marginTop="0dp"
+                android:layout_toEndOf="@+id/cardview"
+                android:fontFamily="sans-serif-condensed"
+                android:textAlignment="textStart"
+                android:textColor="@color/sfondo"
+                android:textSize="14sp"
+                tools:layout_editor_absoluteX="334dp"
+                tools:layout_editor_absoluteY="83dp"/>
 
         </RelativeLayout>
 
@@ -153,9 +168,9 @@
         android:id="@+id/recyclerviewBook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="306dp"
+        android:minHeight="330dp"
         android:layout_below="@+id/relativeLayout"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="56dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="0dp"

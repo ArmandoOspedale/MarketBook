@@ -53,24 +53,6 @@ public class SottoInfoAdapter extends AnimatedExpandableListView.AnimatedExpanda
         return Oggetto.size()-1;
     }
 
-    /**@Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        HashMap<String,String> Oggetto = (HashMap<String,String>) getGroup(groupPosition);
-        if (convertView == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            assert layoutInflater != null;
-            convertView = layoutInflater.inflate(R.layout.info,parent,false);
-        }
-        TextView text = convertView.findViewById(R.id.eventsListEventRowText);
-        text.setText(Oggetto.get("Testo"));
-        return convertView;
-    }*/
-
-    /**@Override
-    public int getChildrenCount(int groupPosition) {
-        HashMap<String,HashMap<String,String>> Oggetto = (HashMap<String,HashMap<String, String>>) getGroup(groupPosition);
-        return Oggetto.size()-1;
-    }*/
 
     @Override
     public Object getGroup(int groupPosition) {
@@ -84,7 +66,6 @@ public class SottoInfoAdapter extends AnimatedExpandableListView.AnimatedExpanda
         }catch (Exception e){
             return 0;
         }
-
     }
 
     @Override

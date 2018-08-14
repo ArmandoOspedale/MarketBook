@@ -1,6 +1,7 @@
 package com.example.armando.marketbook;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private String descrizione;
     private List<Commento> commenti;
     private OnItemClickListener mItemClickListener;
+    private AppBarLayout appBarLayout;
 
     public class MyViewComment extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -57,9 +59,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    CommentAdapter(List<Commento> commenti, String Descrizione) {
+    CommentAdapter(List<Commento> commenti, String Descrizione , AppBarLayout appBarLayout) {
         this.commenti = commenti;
         this.descrizione = Descrizione;
+        this.appBarLayout = appBarLayout;
     }
 
     @Override
@@ -102,6 +105,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     } else {
                         myViewDescrizione.altreInfo.setText(R.string.altre_info);
                         myViewDescrizione.freccia.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+                        appBarLayout.setExpanded(true, false);
+                        appBarLayout.setActivated(true);
                     }
                 }
             });
