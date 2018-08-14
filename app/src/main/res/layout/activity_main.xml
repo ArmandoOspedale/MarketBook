@@ -49,15 +49,23 @@
         android:scrollbars="none"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <ListView
-        android:id="@+id/list_view"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/risultati"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="?android:attr/actionBarSize"
         android:background="@color/sfondo"
         android:nestedScrollingEnabled="true"
         android:scrollbars="none"
+        android:elevation="4dp"
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <ImageView
+        android:id="@+id/sfocato"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/sfondo"
+        android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>
