@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -21,6 +22,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class RisultatiAdapter extends RecyclerView.Adapter<RisultatiAdapter.MyView> {
@@ -48,7 +51,11 @@ public class RisultatiAdapter extends RecyclerView.Adapter<RisultatiAdapter.MyVi
         @Override
         public void onClick(View view) {
             if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(view, risultati.get(getLayoutPosition()));
+                List<View> shared = new ArrayList<>();
+                HashMap<String,String> transitionName= new HashMap<>();
+                //shared.add(Immagine);
+                //transitionName.put(Immagine.getResources().getResourceName(Immagine.getId()),Immagine.getTransitionName());
+                mItemClickListener.onItemClick(view, risultati.get(getLayoutPosition()),shared,transitionName);
             }
         }
     }
@@ -86,6 +93,7 @@ public class RisultatiAdapter extends RecyclerView.Adapter<RisultatiAdapter.MyVi
         final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         try {
             Book oggetto = (Book) risultati.get(position);
+            ViewCompat.setTransitionName(holder.Immagine,oggetto.getIDAutore());
             holder.Titolo.setText(oggetto.getTitolo());
             holder.Prezzo.setText(String.valueOf(oggetto.getPrezzo()) + "\u20ac");
             storageRef = storage.getReferenceFromUrl("gs://books-c7269.appspot.com").child(oggetto.getURLCopertina());
@@ -116,6 +124,7 @@ public class RisultatiAdapter extends RecyclerView.Adapter<RisultatiAdapter.MyVi
         }
         try {
             Autore oggetto = (Autore) risultati.get(position);
+            ViewCompat.setTransitionName(holder.Immagine,oggetto.getUrlImmagine());
             holder.Titolo.setText(oggetto.getNome());
             storageRef = storage.getReferenceFromUrl("gs://books-c7269.appspot.com").child(oggetto.getUrlImmagine());
             final File file = new File(directory.getAbsolutePath(), (String) oggetto.getNome() + ".png");
@@ -151,7 +160,7 @@ public class RisultatiAdapter extends RecyclerView.Adapter<RisultatiAdapter.MyVi
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, Object object);
+        void onItemClick(View view, Object object ,List<View> shared, HashMap<String,String> transitionName);
     }
 
     public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {

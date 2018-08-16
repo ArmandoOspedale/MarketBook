@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+
     <item
-        android:id="@+id/navigation_perte"
-        android:icon="@drawable/ic_person_outline_black_24dp"
-        android:fontFamily="sans-serif-condensed"
+        android:id="@+id/navigation_shop"
+        android:icon="@drawable/ic_shopping_basket_black_24dp"
         android:textSize="20sp"
-        android:title="@string/per_te"/>
+        android:fontFamily="sans-serif-condensed"
+        android:title="@string/shop"/>
 
     <item
         android:id="@+id/navigation_download"
@@ -16,10 +17,10 @@
         android:title="@string/download"/>
 
     <item
-        android:id="@+id/navigation_shop"
-        android:icon="@drawable/ic_shopping_basket_black_24dp"
-        android:textSize="20sp"
+        android:id="@+id/navigation_perte"
+        android:icon="@drawable/ic_person_outline_black_24dp"
         android:fontFamily="sans-serif-condensed"
-        android:title="@string/shop"/>
+        android:textSize="20sp"
+        android:title="@string/per_te"/>
 
 </menu>

@@ -18,7 +18,7 @@
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="italic"
         tools:ignore="RtlSymmetry"
         tools:text="Sezione" />

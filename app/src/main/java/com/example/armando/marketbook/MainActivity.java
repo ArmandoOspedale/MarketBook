@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -37,11 +36,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,10 +55,8 @@ public class MainActivity extends AppCompatActivity {
     //TODO altri ed eventuali
 
     //Dati
-    private ArrayList<ArrayList<Book>> libriCategoria;
-    private ArrayList<String> nomeCategoria;
-    private  DocumentSnapshot documentSnapshot;
-
+    private HashMap<String,Book> libri;
+    private ArrayList<String> categorie;
     //View
     private Toolbar toolbar;
     private RecyclerView mRecyclerView;
@@ -136,9 +131,11 @@ public class MainActivity extends AppCompatActivity {
 
     private List<String> buildArray(List<String> indice, String stringa) {
         List<String> riscontri = new ArrayList<>();
-        for (int i=0;i<indice.size();i++){
-            if(indice.get(i).toLowerCase().contains(stringa.toLowerCase())){
-                riscontri.add(indice.get(i));
+        if(!stringa.equals("")){
+            for (int i=0;i<indice.size();i++){
+                if(indice.get(i).toLowerCase().contains(stringa.toLowerCase())){
+                    riscontri.add(indice.get(i));
+                }
             }
         }
         return riscontri;
@@ -154,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(final String newText) {
                 final List<Object> risultatiQuery = new ArrayList<>();
-                if(!newText.equals("")){
+                //if(!newText.equals("")){
                     List<String> riscontriLibri = buildArray(indiceLibri,newText);
                     final List<String> riscontriAutori = buildArray(indiceAutori,newText);
                     ArrayList<Task> taskArrayList = new ArrayList<>();
@@ -188,31 +185,68 @@ public class MainActivity extends AppCompatActivity {
                                 Book book = Documenti.get(y).get(0).toObject(Book.class);
                                 if(book.getTitolo()==null){
                                     Autore autore = Documenti.get(y).get(0).toObject(Autore.class);
+                                    autore.setID(Documenti.get(y).get(0).getId());
                                     risultatiQuery.add(autore);
                                 }
-                                else {risultatiQuery.add(book);}
-                            }
-
-                            for(int i=0;i<risultatiQuery.size();i++){
-                                try {
-                                    Book book = (Book) risultatiQuery.get(i);
-                                    Log.d("Risultato", book.getTitolo());
-                                }catch (Exception e){
-                                    Autore autore = (Autore) risultatiQuery.get(i);
-                                    Log.d("Risultato", autore.getNome());
+                                else {
+                                    book.setRiferimento(Documenti.get(y).get(0).getReference().getPath());
+                                    risultatiQuery.add(book);
                                 }
                             }
-
                             RisultatiAdapter adapter = new RisultatiAdapter(getApplicationContext(),risultatiQuery);
                             risultati.setAdapter(adapter);
+                            risultati.setFocusable(true);
+                            adapter.SetOnItemClickListener(new RisultatiAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(View view, Object object,List<View> shared, HashMap<String,String> transitionName) {
+                                    try{
+                                        Book book = (Book) object;
+                                        Intent intent = new Intent(MainActivity.this,BookActivity.class);
+                                        setIntent(intent);
+                                        intent.putExtra("LIBRO",book);
+                                        intent.putExtra("TRANSITION_NAME",transitionName);
+                                        View statusBar = findViewById(android.R.id.statusBarBackground);
+                                        View navigationBar = findViewById(android.R.id.navigationBarBackground);
+                                        List<Pair<View, String>> pairs = new ArrayList<>();
+                                        if (statusBar != null) {
+                                            pairs.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+                                        }
+                                        if (navigationBar != null) {
+                                            pairs.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+                                        }
+                                        if (toolbar != null) {
+                                            pairs.add(Pair.create((View)toolbar, toolbar.getTransitionName()));
+                                        }for (int i=0;i<shared.size();i++){
+                                            pairs.add(Pair.create(shared.get(i), shared.get(i).getTransitionName()));
+                                        }
+                                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,pairs.toArray(new Pair[pairs.size()])).toBundle());
+                                    }catch (Exception e){
+                                        Autore autore = (Autore) object;
+                                        Intent intent = new Intent(MainActivity.this,AutoreActivity.class);
+                                        intent.putExtra("ID",autore.getID());
+                                        View statusBar = findViewById(android.R.id.statusBarBackground);
+                                        View navigationBar = findViewById(android.R.id.navigationBarBackground);
+                                        List<Pair<View, String>> pairs = new ArrayList<>();
+                                        if (statusBar != null) {
+                                            pairs.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+                                        }
+                                        if (navigationBar != null) {
+                                            pairs.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+                                        }
+                                        if (toolbar != null) {
+                                            pairs.add(Pair.create((View)toolbar, toolbar.getTransitionName()));
+                                        }
+                                        Bundle options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs.toArray(new Pair[pairs.size()])).toBundle();
+                                        startActivity(intent, options);
+                                    }
+                                }
+                            });
                         }
                     });
-                } else {
+                /*} else {
                     risultatiQuery.clear();
-                    RisultatiAdapter adapter = new RisultatiAdapter(getApplicationContext(),risultatiQuery);
-                    risultati.setAdapter(adapter);
-                }
-
+                    risultati.getAdapter().notifyDataSetChanged();
+                }*/
                 return false;
             }
         });
@@ -251,28 +285,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void ricercaLibri() {
         db = FirebaseFirestore.getInstance();
-        libriCategoria= new ArrayList<>();
-        nomeCategoria = new ArrayList<>();
-        final ArrayList<Book> books = new ArrayList<>();
+        libri= new HashMap<>();
+        categorie = new ArrayList<>();
 
         //Query al Database : Ottengo tutti i documenti
-        db.collection("Libri").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("Index").document("sZYBGqY7z7gXeFEjodCW").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot documentSnapshot : task.getResult()) {
-                        Book book = documentSnapshot.toObject(Book.class);
-                        if (book != null) {
-                            book.setRiferimento(documentSnapshot.getReference().getPath());
-                        }
-                        books.add(book);
-                    }
-                    libriCategoria.add(books);
-                    nomeCategoria.add("Avventura");
-                    //Creo l'adapter con i dati ricavati dal database
-                    VerticalRecyclerViewAdapter adapter = new VerticalRecyclerViewAdapter(libriCategoria,nomeCategoria,getApplicationContext());
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    List<Object> list = (List<Object>) documentSnapshot.get("Sezioni");
+                    VerticalRecyclerViewAdapter adapter = new VerticalRecyclerViewAdapter(list,getApplicationContext());
                     mRecyclerView.setAdapter(adapter);
-                    //Imposto il listener per il click sulla CardView
                     adapter.SetOnItemClickListener(new HorizontalRecyclerViewAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, Book book, List<View> shared, HashMap<String,String> transitionName) {
@@ -307,8 +331,9 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             }
-
         });
+
+        // book.setRiferimento(documentSnapshot.getReference().getPath());
     }
 
     private void setupRecyclerView() {

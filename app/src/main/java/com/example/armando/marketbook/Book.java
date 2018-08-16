@@ -15,8 +15,9 @@ public class Book implements Serializable {
     private  String Path;
     private  double Prezzo;
     private  String Riferimento;
+    private  String Categoria;
 
-    Book(String titolo, String autore, Date publicazione, String urlcopertina, String trama, String genere, String idautore,double prezzo){
+    Book(String titolo, String autore, Date publicazione, String urlcopertina, String trama, String genere, String idautore,double prezzo , String categoria){
         this.Titolo = titolo;
         this.Autore = autore;
         this.Pubblicazione = publicazione;
@@ -25,9 +26,18 @@ public class Book implements Serializable {
         this.Genere = genere;
         this.IDAutore = idautore;
         this.Prezzo = prezzo;
+        this.Categoria = categoria;
     }
 
     Book() {}
+
+    public String getCategoria() {
+        return Categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        Categoria = categoria;
+    }
 
     public double getPrezzo() {
         return Prezzo;

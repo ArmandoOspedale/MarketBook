@@ -10,11 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class VerticalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<ArrayList<Book>> books;
-    private ArrayList<String> categoria;
+    private List<HashMap<String,List<String>>> sezioni;
     private SparseIntArray listPosition = new SparseIntArray();
     private HorizontalRecyclerViewAdapter.OnItemClickListener mItemClickListener;
     private Context mContext;
@@ -30,9 +31,8 @@ public class VerticalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    VerticalRecyclerViewAdapter(ArrayList<ArrayList<Book>> verticalList, ArrayList<String> nomeCategoria, Context context) {
-        this.books = verticalList;
-        this.categoria = nomeCategoria;
+    VerticalRecyclerViewAdapter(Object list, Context context) {
+        this.sezioni = (List<HashMap<String,List<String>>>) list;
         this.mContext = context;
     }
 
@@ -50,9 +50,9 @@ public class VerticalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         LinearLayoutManager RecyclerViewLayout = new LinearLayoutManager(mContext);
         RecyclerViewLayout.setOrientation(LinearLayoutManager.HORIZONTAL);
         cellViewHolder.HorizontalRecyclerView.setLayoutManager( RecyclerViewLayout);
-        HorizontalRecyclerViewAdapter adapter = new HorizontalRecyclerViewAdapter(books.get(position),mContext,true);
+        HorizontalRecyclerViewAdapter adapter = new HorizontalRecyclerViewAdapter(sezioni.get(position).get("OggettiID"),mContext,true,false);
         cellViewHolder.HorizontalRecyclerView.setAdapter(adapter);
-        cellViewHolder.Categoria.setText(categoria.get(position));
+        cellViewHolder.Categoria.setText((CharSequence) sezioni.get(position).get("Nome"));
         adapter.SetOnItemClickListener(mItemClickListener);
         int lastSeenFirstPosition = listPosition.get(position, 0);
         if (lastSeenFirstPosition >= 0) {
@@ -72,9 +72,7 @@ public class VerticalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemCount() {
-        if (books == null)
-            return 0;
-        return books.size();
+        return sezioni.size();
     }
 
     public void SetOnItemClickListener(final HorizontalRecyclerViewAdapter.OnItemClickListener mItemClickListener) {

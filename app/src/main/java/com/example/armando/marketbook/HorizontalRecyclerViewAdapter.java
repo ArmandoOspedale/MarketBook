@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -36,10 +41,13 @@ import java.util.List;
 public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<HorizontalRecyclerViewAdapter.MyView> {
 
     private List<Book> books; //Libri contenuti all'interno di una categoria
+    private List<String> lista;
     private OnItemClickListener mItemClickListener;
     private Context context;
     private int lastPosition = -1;
     private boolean animation;
+    private FirebaseFirestore db;
+    private FirebaseStorage storage;
 
     public class MyView extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private TextView Titolo;
@@ -64,10 +72,10 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
         }
 
         @Override
-        public void onClick(View view) {
+        public void onClick(final View view) {
             if (mItemClickListener != null) {
-                List<View> shared = new ArrayList<>();
-                HashMap<String,String> transitionName= new HashMap<>();
+                final List<View> shared = new ArrayList<>();
+                final HashMap<String,String> transitionName= new HashMap<>();
                 shared.add(Copertina);
                 transitionName.put(Copertina.getResources().getResourceName(Copertina.getId()),Copertina.getTransitionName());
                 //shared.add(Titolo);
@@ -96,12 +104,26 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
         this.books = horizontalList;
         this.context = mcontext;
         this.animation=false;
+        this.lista=null;
+        storage = FirebaseStorage.getInstance();
     }
 
     HorizontalRecyclerViewAdapter(List<Book> horizontalList, Context mcontext, boolean animation) {
         this.books = horizontalList;
         this.context = mcontext;
         this.animation = animation;
+        this.lista=null;
+        storage = FirebaseStorage.getInstance();
+    }
+
+    HorizontalRecyclerViewAdapter(List<String> list, Context mcontext, boolean animation , boolean x) {
+        this.lista = list;
+        this.books = new ArrayList<>();
+        this.context = mcontext;
+        this.animation = animation;
+        db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+
     }
 
     //Viene chiamato quando ViewHolder personalizzato ha bisogno di essere inizializzato
@@ -116,38 +138,76 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
     //Specifica il contenuto di ciascun elemento della RecyclerView
     @Override
     public void onBindViewHolder(@NonNull final MyView holder, final int position) {
-
-        final Book oggetto = books.get(position);
-        holder.Titolo.setText(oggetto.getTitolo());
-        holder.Autore.setText(oggetto.getAutore());
-        holder.Prezzo.setText(String.valueOf(oggetto.getPrezzo()) + "\u20ac");
-        ViewCompat.setTransitionName(holder.Immagine,oggetto.getIDAutore());
-        ViewCompat.setTransitionName(holder.Titolo,oggetto.getTitolo());
-        ViewCompat.setTransitionName(holder.Autore,oggetto.getAutore());
-        ViewCompat.setTransitionName(holder.Copertina,oggetto.getURLCopertina());
-
-        // Creo istanza di FirebaseStorage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://books-c7269.appspot.com").child(oggetto.getURLCopertina());
-        try {
-            final File localFile = File.createTempFile((String) oggetto.getTitolo(), "png");
-            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+        if(lista==null){
+            final Book oggetto = books.get(position);
+            holder.Titolo.setText(oggetto.getTitolo());
+            holder.Autore.setText(oggetto.getAutore());
+            holder.Prezzo.setText(String.valueOf(oggetto.getPrezzo()) + "\u20ac");
+            ViewCompat.setTransitionName(holder.Immagine,oggetto.getIDAutore());
+            ViewCompat.setTransitionName(holder.Copertina,oggetto.getURLCopertina());
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://books-c7269.appspot.com").child(oggetto.getURLCopertina());
+            try {
+                final File localFile = File.createTempFile((String) oggetto.getTitolo(), "png");
+                storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+                        bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(130 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),Math.round(170 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),true);
+                        holder.Copertina.setImageBitmap(bitmap);
+                        holder.ProgressBar.setVisibility(View.GONE);
+                        oggetto.setPath(localFile.getAbsolutePath());
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                    }
+                });
+            } catch (IOException e ) {
+                holder.Copertina.setImageResource(R.drawable.ic_image_black_24dp);
+            }
+        }else{
+            db.collection("Libri").document(lista.get(position)).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-                    bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(130 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),Math.round(170 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),true);
-                    holder.Copertina.setImageBitmap(bitmap);
-                    holder.ProgressBar.setVisibility(View.GONE);
-                    oggetto.setPath(localFile.getAbsolutePath());
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()){
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if (documentSnapshot.exists()) {
+                            final Book book = documentSnapshot.toObject(Book.class);
+                            book.setRiferimento(documentSnapshot.getReference().getPath());
+                            books.add(book);
+                            holder.Titolo.setText(book.getTitolo());
+                            holder.Autore.setText(book.getAutore());
+                            holder.Prezzo.setText(String.valueOf(book.getPrezzo()) + "\u20ac");
+                            ViewCompat.setTransitionName(holder.Immagine,book.getIDAutore());
+                            ViewCompat.setTransitionName(holder.Copertina,book.getURLCopertina());
+                            StorageReference storageRef = storage.getReferenceFromUrl("gs://books-c7269.appspot.com").child(book.getURLCopertina());
+                            try {
+                                final File localFile = File.createTempFile((String) book.getTitolo(), "png");
+                                storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+                                        bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(130 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),Math.round(170 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),true);
+                                        holder.Copertina.setImageBitmap(bitmap);
+                                        holder.ProgressBar.setVisibility(View.GONE);
+                                        book.setPath(localFile.getAbsolutePath());
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                    }
+                                });
+                            } catch (IOException e ) {
+                                holder.Copertina.setImageResource(R.drawable.ic_image_black_24dp);
+                            }
+                        } else {
+                            Log.d("Documento", "Documento non trovato");
+                        }
+                    }
                 }
             });
-        } catch (IOException e ) {
-            holder.Copertina.setImageResource(R.drawable.ic_image_black_24dp);
         }
         if(animation){
             setAnimation(holder.itemView,position);
@@ -157,7 +217,11 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
     // Restituisce il numero di elementi presenti nei dati
     @Override
     public int getItemCount() {
-        return books.size();
+        if (lista!=null){
+            return  lista.size();
+        } else {
+            return books.size();
+        }
     }
 
     // La recyclerView non ha setOnItemClickListener quindi bisogna implementarlo

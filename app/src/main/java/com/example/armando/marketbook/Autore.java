@@ -5,6 +5,7 @@ public class Autore {
     private  String Nome;
     private  String UrlImmagine;
     private  String Date;
+    private  String ID;
 
     Autore(String nome, String UrlImmagine, String date) {
         this.Nome = nome;
@@ -13,6 +14,14 @@ public class Autore {
     }
 
     Autore() {}
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
 
     public String getNome() {
         return Nome;
