@@ -38,6 +38,16 @@
         app:itemTextColor="@color/colorPrimary"
         app:menu="@menu/navigation" />
 
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?android:attr/actionBarSize"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:animateLayoutChanges="true">
+    </FrameLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/vertical_courses_list"
         android:layout_width="match_parent"
@@ -45,6 +55,7 @@
         android:layout_marginBottom="?android:attr/actionBarSize"
         android:nestedScrollingEnabled="true"
         android:scrollbars="none"
+        android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.v7.widget.RecyclerView

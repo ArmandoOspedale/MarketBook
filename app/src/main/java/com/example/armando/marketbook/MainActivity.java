@@ -9,6 +9,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         setupBottonNavigationView();
         setupRecyclerView();
         setupFirebase();
-        
+
     }
 
     @Override
@@ -260,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             signInAnonymously();
         }
-        
+
     }
 
     private void signInAnonymously() {
@@ -281,6 +283,31 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupBottonNavigationView() {
         bottomNavigationView = findViewById(R.id.navigationBar);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment selectedFragment = null;
+                switch (item.getItemId()) {
+                    case R.id.navigation_shop:
+                        selectedFragment = negozioFragment.newInstance();
+                        break;
+                    case R.id.navigation_download:
+                        selectedFragment = negozioFragment.newInstance();
+                        break;
+                }
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_layout, selectedFragment);
+                transaction.commit();
+                return true;
+            }
+        });
+        //Manually displaying the first fragment - one time only
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, negozioFragment.newInstance());
+        transaction.commit();
+
+        //Used to select an item programmatically
+        //bottomNavigationView.getMenu().getItem(2).setChecked(true);
     }
 
     private void ricercaLibri() {
