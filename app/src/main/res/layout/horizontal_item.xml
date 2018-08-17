@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardview"
-    android:layout_width="130dp"
-    android:layout_height="230dp"
+    android:layout_width="120dp"
+    android:layout_height="220dp"
     card_view:contentPadding="0dp"
     card_view:cardCornerRadius="5dp"
     card_view:cardElevation="4dp"
@@ -22,9 +22,9 @@
             android:layout_height="0dp"
             android:indeterminate="true"
             android:indeterminateBehavior="repeat"
-            android:scaleY="5"
             android:indeterminateTint="@color/colorPrimary"
-            card_view:layout_constraintBottom_toTopOf="@+id/titololibro"
+            android:scaleY="5"
+            card_view:layout_constraintBottom_toBottomOf="@+id/Copertina"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +32,7 @@
         <ImageView
             android:id="@+id/Copertina"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="160dp"
             android:contentDescription="@string/categoria1"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
@@ -73,12 +73,12 @@
             android:textColor="@color/cardview_dark_background"
             android:textSize="14sp"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintEnd_toStartOf="@+id/prezzo"
+            card_view:layout_constraintEnd_toStartOf="@+id/Autore"
             card_view:layout_constraintStart_toStartOf="parent"
             tools:text="Autore" />
 
         <TextView
-            android:id="@+id/prezzo"
+            android:id="@+id/Autore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="3dp"

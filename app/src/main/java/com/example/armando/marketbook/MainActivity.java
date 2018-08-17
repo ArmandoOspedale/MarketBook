@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = negozioFragment.newInstance();
                         break;
                     case R.id.navigation_download:
-                        selectedFragment = negozioFragment.newInstance();
+                        selectedFragment = downloadFragment.newInstance();
                         break;
                 }
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

@@ -68,7 +68,7 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
             Autore = view.findViewById(R.id.autoreLibro);
             ProgressBar = view.findViewById(R.id.progressBar);
             Immagine = view.findViewById(R.id.cardview);
-            Prezzo = view.findViewById(R.id.prezzo);
+            Prezzo = view.findViewById(R.id.Autore);
         }
 
         @Override
@@ -153,7 +153,7 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-                        bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(130 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),Math.round(170 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),true);
+                        bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(120 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),Math.round(160 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),true);
                         holder.Copertina.setImageBitmap(bitmap);
                         holder.ProgressBar.setVisibility(View.GONE);
                         oggetto.setPath(localFile.getAbsolutePath());
@@ -189,7 +189,7 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
                                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                         Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                                         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-                                        bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(130 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),Math.round(170 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),true);
+                                        bitmap = Bitmap.createScaledBitmap(bitmap, Math.round(120 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),Math.round(160 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT)),true);
                                         holder.Copertina.setImageBitmap(bitmap);
                                         holder.ProgressBar.setVisibility(View.GONE);
                                         book.setPath(localFile.getAbsolutePath());

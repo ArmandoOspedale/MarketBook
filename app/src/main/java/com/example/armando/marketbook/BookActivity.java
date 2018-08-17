@@ -569,7 +569,7 @@ public class BookActivity extends AppCompatActivity {
         //Titolo.setTransitionName(transitionName.get(Titolo.getResources().getResourceName(Titolo.getId())));
         //Autore.setTransitionName(transitionName.get(Autore.getResources().getResourceName(Autore.getId())));
         TextView dataPubblicazione = findViewById(R.id.dataLibro);
-        TextView prezzo = findViewById(R.id.prezzo);
+        TextView prezzo = findViewById(R.id.Autore);
         titolo.setText(libro.getTitolo());
         autore.setText(libro.getAutore());
         dataPubblicazione.setText("Anno:" + DateFormat.format("yyyy",libro.getPubblicazione()));

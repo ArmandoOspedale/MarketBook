@@ -146,7 +146,7 @@
                 tools:layout_editor_absoluteY="83dp"/>
 
             <TextView
-                android:id="@+id/prezzo"
+                android:id="@+id/Autore"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/dataLibro"

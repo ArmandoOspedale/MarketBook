@@ -3,40 +3,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="100dp">
 
 
     <TextView
         android:id="@+id/Nome-Titolo"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:ellipsize="end"
         android:fontFamily="sans-serif-condensed"
         android:gravity="center|start"
         android:maxLines="1"
+        android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="17sp"
+        android:textSize="19sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="@+id/cardview"
-        app:layout_constraintEnd_toStartOf="@+id/Autore"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cardview"
-        app:layout_constraintTop_toTopOf="@+id/cardview"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/Autore"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="sans-serif-condensed"
         android:gravity="center"
+        android:textAlignment="center"
         android:textColor="@color/colorPrimary"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="@+id/Nome-Titolo"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/Nome-Titolo" />
+        app:layout_constraintStart_toEndOf="@+id/cardview"
+        app:layout_constraintTop_toBottomOf="@+id/Nome-Titolo" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -55,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         card_view:cardCornerRadius="5dp"
         card_view:cardElevation="4dp"

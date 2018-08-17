@@ -21,7 +21,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +43,7 @@ public class RisultatiAdapter extends RecyclerView.Adapter<RisultatiAdapter.MyVi
             view.setOnClickListener(this);
             Titolo = view.findViewById(R.id.Nome_Titolo);
             Immagine = view.findViewById(R.id.Immagine);
-            Prezzo = view.findViewById(R.id.prezzo);
+            Prezzo = view.findViewById(R.id.Autore);
             progressBar = view.findViewById(R.id.progressBar);
         }
 
