@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO activity specifica autore > ok
     //TODO prelevare i dati dal database, mapping del database -> ok
     //TODO Sistemare ActionBar -> ok
-    //TODO Analisi codice a barre libro per ottenere versione digitale a partire dalla versione fisica del libro -> da inserire nel fragmento download
+    //TODO Analisi codice a barre libro per ottenere versione digitale a partire dalla versione fisica del libro -> ok
     //TODO altri ed eventuali...
 
     //View
