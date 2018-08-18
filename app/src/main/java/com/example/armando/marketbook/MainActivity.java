@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,22 +48,17 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO fragment Negozio,Download,Forum
-    //TODO barra di ricerca, implementare il filtraggio
+    //TODO fragment Negozio,Download -> ok
+    //TODO barra di ricerca, implementare il filtraggio -> ok
     //TODO sezione commenti utente > ok
     //TODO activity specifica autore > ok
-    //TODO prelevare i dati dal database, mapping del database -> work in progress
+    //TODO prelevare i dati dal database, mapping del database -> ok
     //TODO Sistemare ActionBar -> ok
     //TODO Analisi codice a barre libro per ottenere versione digitale a partire dalla versione fisica del libro -> da inserire nel fragmento download
-    //TODO altri ed eventuali
+    //TODO altri ed eventuali...
 
-    //Dati
-    private HashMap<String,Book> libri;
-    private ArrayList<String> categorie;
     //View
     private Toolbar toolbar;
-    private RecyclerView mRecyclerView;
-    private  BottomNavigationView bottomNavigationView;
     private ImageView sfondoSfocato;
 
     //Database
@@ -72,13 +68,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            negozioFragment negozioFragment= new negozioFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.frame_layout, negozioFragment);
+            fragmentTransaction.commit();
+        }
+
         setupWindowAnimations();
         setContentView(R.layout.activity_main);
         setupToolbar();
-        setupBottonNavigationView();
-        setupRecyclerView();
         setupFirebase();
-
     }
 
     @Override
@@ -245,10 +245,6 @@ public class MainActivity extends AppCompatActivity {
                             });
                         }
                     });
-                /*} else {
-                    risultatiQuery.clear();
-                    risultati.getAdapter().notifyDataSetChanged();
-                }*/
                 return false;
             }
         });
@@ -256,9 +252,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupFirebase() {
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            ricercaLibri();
+            setupBottonNavigationView();
         } else {
             signInAnonymously();
         }
@@ -269,20 +266,18 @@ public class MainActivity extends AppCompatActivity {
         mAuth.signInAnonymously().addOnSuccessListener(this, new  OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
-                ricercaLibri();
+                setupBottonNavigationView();
             }
-        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.e("Errore", "signInAnonymously:FAILURE", exception);
-                    }
-                });
-
+        }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.e("Errore", "signInAnonymously:FAILURE", exception);
+            }
+        });
     }
 
     private void setupBottonNavigationView() {
-        bottomNavigationView = findViewById(R.id.navigationBar);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigationBar);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -299,88 +294,6 @@ public class MainActivity extends AppCompatActivity {
                 transaction.replace(R.id.frame_layout, selectedFragment);
                 transaction.commit();
                 return true;
-            }
-        });
-        //Manually displaying the first fragment - one time only
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, negozioFragment.newInstance());
-        transaction.commit();
-
-        //Used to select an item programmatically
-        //bottomNavigationView.getMenu().getItem(2).setChecked(true);
-    }
-
-    private void ricercaLibri() {
-        db = FirebaseFirestore.getInstance();
-        libri= new HashMap<>();
-        categorie = new ArrayList<>();
-
-        //Query al Database : Ottengo tutti i documenti
-        db.collection("Index").document("sZYBGqY7z7gXeFEjodCW").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    List<Object> list = (List<Object>) documentSnapshot.get("Sezioni");
-                    VerticalRecyclerViewAdapter adapter = new VerticalRecyclerViewAdapter(list,getApplicationContext());
-                    mRecyclerView.setAdapter(adapter);
-                    adapter.SetOnItemClickListener(new HorizontalRecyclerViewAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, Book book, List<View> shared, HashMap<String,String> transitionName) {
-                            //Ottengo dall'adapter il libro > passare alla activity specifica per libro
-                            //Creo l'intent per passare all'altra activity
-                            Intent intent = new Intent(MainActivity.this,BookActivity.class);
-                            setIntent(intent);
-                            intent.putExtra("LIBRO",book);
-                            intent.putExtra("TRANSITION_NAME",transitionName);
-                            View statusBar = findViewById(android.R.id.statusBarBackground);
-                            View navigationBar = findViewById(android.R.id.navigationBarBackground);
-                            List<Pair<View, String>> pairs = new ArrayList<>();
-                            if (statusBar != null) {
-                                pairs.add(Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
-                            }
-                            if (navigationBar != null) {
-                                pairs.add(Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
-                            }
-                            if (toolbar != null) {
-                                pairs.add(Pair.create((View)toolbar, toolbar.getTransitionName()));
-                            }
-                            for (int i=0;i<shared.size();i++){
-                                pairs.add(Pair.create(shared.get(i), shared.get(i).getTransitionName()));
-                            }
-                            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,pairs.toArray(new Pair[pairs.size()])).toBundle());
-                        }
-
-                        //Al momento non è implementata la pressione prolungata -> aggiungi ai desiderati
-                        public void onItemLongClick(View view, Book book) {
-
-                        }
-                    });
-                }
-            }
-        });
-
-        // book.setRiferimento(documentSnapshot.getReference().getPath());
-    }
-
-    private void setupRecyclerView() {
-        mRecyclerView = findViewById(R.id.vertical_courses_list);
-        RecyclerView.LayoutManager RecyclerViewLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(RecyclerViewLayoutManager);
-        mRecyclerView.setAdapter(new RecyclerView.Adapter() {
-            @NonNull
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return null;
-            }
-
-            @Override
-            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) { }
-
-            @Override
-            public int getItemCount() {
-                return 0;
             }
         });
     }
@@ -575,4 +488,9 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //downloadFragment.onActivityResult(requestCode, resultCode, data);
+    }
 }

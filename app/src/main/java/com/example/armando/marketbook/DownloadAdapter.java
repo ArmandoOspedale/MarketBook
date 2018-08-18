@@ -9,6 +9,8 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,6 +36,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
     private OnItemClickListener mItemClickListener;
     private FirebaseStorage storage;
     private File directory;
+    private int lastPosition = -1;
 
     public class MyView extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView Titolo;
@@ -63,11 +66,13 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         this.Downloads = downloads;
         this.db = FirebaseFirestore.getInstance();
         this.storage = FirebaseStorage.getInstance();
-        directory = mContext.getDir("download", Context.MODE_PRIVATE);
-        if (!directory.exists())
-        {
-            directory.mkdirs();
-        }
+        try {
+            directory = mContext.getDir("download", Context.MODE_PRIVATE);
+            if (!directory.exists())
+            {
+                directory.mkdirs();
+            }
+        }catch (Exception e){}
     }
 
     @Override
@@ -104,6 +109,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
                         holder.Immagine.setImageBitmap(bitmap);
                         holder.progressBar.setVisibility(View.GONE);
                     }
+                    setAnimation(holder.itemView,position);
                 }
             }
         });
@@ -136,6 +142,14 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.MyView
         for (int i=0; i<files.length; i++) {
             File myFile = new File(file, files[i]);
             myFile.delete();
+        }
+    }
+
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.item);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
         }
     }
 

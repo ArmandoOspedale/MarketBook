@@ -51,7 +51,7 @@ public class negozioFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.negozio_layout, container, false);
         setupRecyclerView(rootView);
-        setupFirebase();
+        ricercaLibri();
         return rootView;
     }
 
@@ -74,31 +74,6 @@ public class negozioFragment extends Fragment {
             public int getItemCount() {
                 return 0;
             }
-        });
-    }
-
-    private void setupFirebase() {
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            ricercaLibri();
-        } else {
-            signInAnonymously();
-        }
-
-    }
-
-    private void signInAnonymously() {
-        mAuth.signInAnonymously().addOnSuccessListener(getActivity(), new  OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                ricercaLibri();
-            }
-        }).addOnFailureListener((Executor) this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.e("Errore", "signInAnonymously:FAILURE", exception);
-                    }
         });
     }
 

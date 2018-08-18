@@ -119,6 +119,7 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
     HorizontalRecyclerViewAdapter(List<String> list, Context mcontext, boolean animation , boolean x) {
         this.lista = list;
         this.books = new ArrayList<>();
+        for (int i = 0; i < lista.size(); i++) books.add(null);
         this.context = mcontext;
         this.animation = animation;
         db = FirebaseFirestore.getInstance();
@@ -175,7 +176,7 @@ public class HorizontalRecyclerViewAdapter extends RecyclerView.Adapter<Horizont
                         if (documentSnapshot.exists()) {
                             final Book book = documentSnapshot.toObject(Book.class);
                             book.setRiferimento(documentSnapshot.getReference().getPath());
-                            books.add(book);
+                            books.set(position, book);
                             holder.Titolo.setText(book.getTitolo());
                             holder.Autore.setText(book.getAutore());
                             holder.Prezzo.setText(String.valueOf(book.getPrezzo()) + "\u20ac");

@@ -207,13 +207,12 @@ public class BookActivity extends AppCompatActivity {
                 CaricamentoCommenti.setVisibility(View.VISIBLE);
                 ricercaCommenti(true);
             }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(),"Errore nell'aggiungere il commento" , Toast.LENGTH_SHORT).show();
-                    }
-                });
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(),"Errore nell'aggiungere il commento" , Toast.LENGTH_SHORT).show();
+                }
+        });
     }
 
     private boolean isEmpty(EditText etText) {

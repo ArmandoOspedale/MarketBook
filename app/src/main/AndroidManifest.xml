@@ -21,7 +21,6 @@
             android:name=".BookActivity"
             android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity android:name=".AutoreActivity"/>
-        <activity android:name=".BarCodeActivity"/>
     </application>
 
 </manifest>
